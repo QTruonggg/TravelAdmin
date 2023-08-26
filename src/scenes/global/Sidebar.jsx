@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -43,6 +43,8 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("dashboard");
 
+  const [showSubItems, setShowSubItems] = useState(false);
+
   return (
     <Box
       sx={{
@@ -82,7 +84,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  DashBoard
+                  AdminKarnel
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -109,7 +111,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  john doe
+                  Name
                 </Typography>
                 <Typography variant="h2" color={colors.greenAccent[500]}>
                   Test protoype
@@ -163,6 +165,24 @@ const Sidebar = () => {
             >
               Pages
             </Typography>
+            
+           
+            <SubMenu
+              title="District"
+              icon={<CalendarTodayOutlinedIcon />}
+              onClick={() => setShowSubItems(!showSubItems)}
+            >
+              <MenuItem>
+                <Link to="/districtList">List</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to="/districtCreate">Create</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to="/districtUpdate">Update</Link>
+              </MenuItem>
+            </SubMenu>
+
             <Item
               title="Profile Form"
               to="/form"

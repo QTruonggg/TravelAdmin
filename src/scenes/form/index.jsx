@@ -13,6 +13,7 @@ const Form = () => {
   };
 
   return (
+    <div className='container-lg'>
     <Box m="20px">
       <Header title="ADD USER" subtitle="Create a new profile for all uses" />
 
@@ -126,6 +127,7 @@ const Form = () => {
         )}
       </Formik>
     </Box>
+    </div>
   );
 };
 
