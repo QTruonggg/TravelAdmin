@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
+import {  Upload } from 'antd';
 
 const DistrictCreate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
     console.log(values);
+    const updatedValues = { ...values, images: selectedImages };
+    console.log(updatedValues);
+    setSubmitting(false);
+  };
+
+  const [selectedImages, setSelectedImages] = useState([]);
+  
+  const handleImageUpload = ({ file }) => {
+    setSelectedImages([...selectedImages, file]);
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = selectedImages.filter((_, i) => i !== index);
+    setSelectedImages(updatedImages);
   };
 
   return (
@@ -39,6 +54,7 @@ const DistrictCreate = () => {
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
+
                 <TextField
                   fullWidth
                   variant="filled"
@@ -117,7 +133,42 @@ const DistrictCreate = () => {
                   helperText={touched.address2 && errors.address2}
                   sx={{ gridColumn: "span 4" }}
                 />
+
+
               </Box>
+              <div style={{marginTop:'24px'}}>
+                <Upload
+                    accept="image/*"
+                    customRequest={handleImageUpload}
+                    showUploadList={false}
+                    multiple
+                  >
+                  <button className='bg-info' type='button' style={{borderRadius:'6px', padding:'6px'}}>Add Images</button>
+                  </Upload>
+                  {selectedImages.length > 0 && (
+                    <div style={{ marginTop: '10px' }}>
+                      <div style={{display:'flex', flexWrap:'wrap'}}>
+                        {selectedImages.map((image, index) => (
+                          <div key={index} style={{position:'relative', marginRight:'10px', marginBottom:'10px'}}>
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Selected ${index}`}
+                            style={{ width: '166px', height:'110px', objectFit:'cover'}}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(index)} 
+                            style={{position:'absolute', right:'0', borderRadius:'50%', border:'none'}}
+                          >
+                            X
+                          </button>
+                        </div>
+                          
+                        ))}
+                      </div>
+                    </div>
+                  )}
+              </div>
               <Box display="flex" justifyContent="end" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">
                   Create New User
@@ -152,6 +203,7 @@ const initialValues = {
   contact: "",
   address1: "",
   address2: "",
+  images: [],
 };   
 
 export default DistrictCreate;

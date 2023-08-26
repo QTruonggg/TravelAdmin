@@ -20,6 +20,7 @@ import Geography from "./scenes/geography";
 import Main from "./scenes/main";
 
 import DistrictCreate from './scenes/district/create';
+import DistrictList from './scenes/district/list';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/districtCreate" element={<DistrictCreate />} />
+                <Route path="/districtList" element={<DistrictList />} />
                 <Route path="/form" element={<Form />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/faq" element={<FAQ />} />
