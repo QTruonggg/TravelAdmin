@@ -11,32 +11,21 @@ const DistrictCreate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleFormSubmitDistrict = async (values, { setSubmitting }) => {
+  const handleFormSubmitDistrict = async (values, { setSubmitting,resetForm }) => {
     try {
-      // Step 1: Tạo đối tượng dữ liệu cho District
-      const districtData = {
-        name: values.name,
-        description: values.description,
-      };
-  
-      // Step 2: Gửi dữ liệu District lên API và lấy ID của District
-      const response = await axiosInstance('ManageDistrict', 'POST', districtData);
-      const districtId = response.data.id;
-  
-      // Step 3: Upload từng ảnh đã chọn với ID của District
-      for (const image of selectedImages) {
-        const formData = new FormData();
-        formData.append('file', image);
-  
-        const uploadResponse = await axiosInstance(`Upload/image/${districtId}`, 'POST', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        console.log('Image upload response:', uploadResponse.data);
+      const districtData = new FormData();
+      districtData.append("name", values.name);
+      districtData.append("description", values.description);
+      
+      for (let i = 0; i < selectedImages.length; i++) {
+        districtData.append("images", selectedImages[i]);
       }
-  
+
+      await axiosInstance('ManageDistrict', 'POST', districtData);
+      
       setSubmitting(false);
+      setSelectedImages([]); // Xóa hết ảnh đã chọn
+      resetForm(); 
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitting(false);
