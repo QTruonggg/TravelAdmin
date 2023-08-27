@@ -9,7 +9,7 @@ const DistrictList = () => {
   const [districts, setDistricts] = useState([]);
 
   useEffect(() => {
-    axiosInstance("District", "GET")
+    axiosInstance("District/paging?limit=6", "GET")
       .then((response) => {
         setDistricts(response.data);
         console.log(response.data);
@@ -37,7 +37,7 @@ const DistrictList = () => {
               <th style={{width:'25%', padding:'12px'}}>Name</th>
               <th style={{width:'35%', padding:'12px'}}>Description</th>
               <th style={{width:'10%', padding:'12px'}}>Status</th>
-              <th style={{width:'10%', textAlign:'center', padding:'12px'}}>Act</th>
+              <th style={{width:'10%', textAlign:'center', padding:'12px'}}>Action</th>
             </thead>
             <tbody>
               {districts.map((district, index) => (
@@ -45,7 +45,7 @@ const DistrictList = () => {
                   <td style={{padding:'12px'}}>{index + 1}</td>
                   <td style={{padding:'12px'}}>{district.name}</td>
                   <td className="descr" style={{padding:'12px'}}>{district.description}</td>
-                  <td style={{padding:'12px'}}>{district.status}</td>
+                  <td style={{padding:'12px'}}>{district.status ==1?"Active":"InActive"}</td>
 
                   <td style={{textAlign:'right', padding:'8px'}}>
                       <Link to={`/districtUpdate/${district.id}`} style={{marginRight:'16px'}}>
