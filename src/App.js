@@ -21,7 +21,8 @@ import Main from "./scenes/main";
 
 import DistrictCreate from './scenes/district/create';
 import DistrictList from './scenes/district/list';
-
+import DistrictUpdate from './scenes/district/update';
+import { useParams } from "react-router-dom";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -41,8 +42,11 @@ function App() {
                 <Route path="/team" element={<Team />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/invoices" element={<Invoices />} />
-                <Route path="/districtCreate" element={<DistrictCreate />} />
+
                 <Route path="/districtList" element={<DistrictList />} />
+                <Route path="/districtCreate" element={<DistrictCreate />} />
+                <Route path="/districtUpdate/:id" element={<DistrictUpdate />} />
+
                 <Route path="/form" element={<Form />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/faq" element={<FAQ />} />

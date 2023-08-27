@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -6,30 +6,66 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import {  Upload } from 'antd';
 import axiosInstance from '../../utils/axiosInstance';
+import { useParams } from "react-router-dom";
 
-const DistrictCreate = () => {
-  const isNonMobile = useMediaQuery("(min-width:600px)");
-  const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleFormSubmitDistrict = async (values, { setSubmitting,resetForm }) => {
+const DistrictUpdate = () => {
+    const { id } = useParams(); 
+    const isUpdating = !!id;
+    const isNonMobile = useMediaQuery("(min-width:600px)");
+
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [initialValues, setInitialValues] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+    const [fetchedData, setFetchedData] = useState({ name: "", description: "", status:"", images:[] });
+    
+    useEffect(() => {
+        if (isUpdating) {
+          axiosInstance(`District/${id}`, "GET")
+            .then((response) => {
+              const data = response.data;
+              setFetchedData({
+                name: data.name,
+                description: data.description,
+                status: data.status,
+                images: data.images,
+              });
+              setInitialValues({
+                name: data.name,
+                description: data.description,
+                status: data.status,
+                images: data.images,
+              });
+              console.log(data);
+
+            })
+            .catch((error) => {
+              console.error("Error fetching district data:", error);
+            });
+        }
+      }, [id, isUpdating]);
+
+  const handleUpdateFormDistrict = async (values, { setSubmitting }) => {
     try {
+      setIsSubmitting(true);
+  
       const districtData = new FormData();
-      districtData.append("name", values.name);
-      districtData.append("description", values.description);
-      
+      districtData.append('name', values.name);
+      districtData.append('description', values.description);
+  
       for (let i = 0; i < selectedImages.length; i++) {
-        districtData.append("images", selectedImages[i]);
+        districtData.append('images', selectedImages[i]);
       }
   
       console.log(districtData);
-      await axiosInstance('ManageDistrict', 'POST', districtData);
-      
-      setSubmitting(false);
-      setSelectedImages([]); 
-      resetForm(); 
+      await axiosInstance(`ManageDistrict/${id}`, 'PUT', districtData);
+  
+      setIsSubmitting(false);
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitting(false);
+      console.error('Error updating district data:', error);
+      setIsSubmitting(false);
     }
   };
 
@@ -45,10 +81,10 @@ const DistrictCreate = () => {
   return (
     <div className='container-lg mt-5'>
       <Box m="20px">
-        <Header title="Add District" subtitle="Create a new district" />
+        <Header title="Update District" subtitle="Update a district" />
 
         <Formik
-          onSubmit={handleFormSubmitDistrict}
+          onSubmit={handleUpdateFormDistrict}
           initialValues={initialValues}
           validationSchema={checkoutSchema}
         >
@@ -77,7 +113,7 @@ const DistrictCreate = () => {
                   label="Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.name}
+                  value={fetchedData.name}
                   name="name"
                   error={!!touched.name && !!errors.name}
                   helperText={touched.name && errors.name}
@@ -90,12 +126,13 @@ const DistrictCreate = () => {
                   label="Description"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.description}
+                  value={fetchedData.description}
                   name="description"
                   error={!!touched.description && !!errors.description}
                   helperText={touched.description && errors.description}
                   sx={{ gridColumn: "span 4" }}
                 />
+                <div>Status: {isUpdating ? fetchedData.status : values.status}</div>
 
 
               </Box>
@@ -118,6 +155,7 @@ const DistrictCreate = () => {
                             alt={`Selected ${index}`}
                             style={{ width: '166px', height:'110px', objectFit:'cover'}}
                           />
+                          
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(index)} 
@@ -131,10 +169,12 @@ const DistrictCreate = () => {
                       </div>
                     </div>
                   )}
+                  <img src={fetchedData.images.map((image)=>(image.imageUrl))} alt="" style={{width:'50%'}} />
+                  
               </div>
               <Box display="flex" justifyContent="end" mt="20px">
-                <Button type="submit" color="secondary" variant="contained">
-                  Create District
+                <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
+                    {isSubmitting ? 'Updating...' : 'Update District'}
                 </Button>
               </Box>
             </form>
@@ -155,4 +195,4 @@ const initialValues = {
   images: [],
 };   
 
-export default DistrictCreate;
+export default DistrictUpdate;
