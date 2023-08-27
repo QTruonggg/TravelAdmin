@@ -5,19 +5,44 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import {  Upload } from 'antd';
+import axiosInstance from '../../utils/axiosInstance';
 
 const DistrictCreate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleFormSubmit = (values) => {
-    console.log(values);
-    const updatedValues = { ...values, images: selectedImages };
-    console.log(updatedValues);
-    setSubmitting(false);
+  const handleFormSubmitDistrict = async (values, { setSubmitting }) => {
+    try {
+      // Step 1: Tạo đối tượng dữ liệu cho District
+      const districtData = {
+        name: values.name,
+        description: values.description,
+      };
+  
+      // Step 2: Gửi dữ liệu District lên API và lấy ID của District
+      const response = await axiosInstance('ManageDistrict', 'POST', districtData);
+      const districtId = response.data.id;
+  
+      // Step 3: Upload từng ảnh đã chọn với ID của District
+      for (const image of selectedImages) {
+        const formData = new FormData();
+        formData.append('file', image);
+  
+        const uploadResponse = await axiosInstance(`Upload/image/${districtId}`, 'POST', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('Image upload response:', uploadResponse.data);
+      }
+  
+      setSubmitting(false);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitting(false);
+    }
   };
 
-  const [selectedImages, setSelectedImages] = useState([]);
-  
   const handleImageUpload = ({ file }) => {
     setSelectedImages([...selectedImages, file]);
   };
@@ -33,7 +58,7 @@ const DistrictCreate = () => {
         <Header title="Add District" subtitle="Create a new district" />
 
         <Formik
-          onSubmit={handleFormSubmit}
+          onSubmit={handleFormSubmitDistrict}
           initialValues={initialValues}
           validationSchema={checkoutSchema}
         >
@@ -59,78 +84,26 @@ const DistrictCreate = () => {
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="First Name"
+                  label="Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.firstName}
-                  name="firstName"
-                  error={!!touched.firstName && !!errors.firstName}
-                  helperText={touched.firstName && errors.firstName}
-                  sx={{ gridColumn: "span 2" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Last Name"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.lastName}
-                  name="lastName"
-                  error={!!touched.lastName && !!errors.lastName}
-                  helperText={touched.lastName && errors.lastName}
-                  sx={{ gridColumn: "span 2" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Email"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.email}
-                  name="email"
-                  error={!!touched.email && !!errors.email}
-                  helperText={touched.email && errors.email}
+                  value={values.name}
+                  name="name"
+                  error={!!touched.name && !!errors.name}
+                  helperText={touched.name && errors.name}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="Contact Number"
+                  label="Description"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.contact}
-                  name="contact"
-                  error={!!touched.contact && !!errors.contact}
-                  helperText={touched.contact && errors.contact}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Address 1"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.address1}
-                  name="address1"
-                  error={!!touched.address1 && !!errors.address1}
-                  helperText={touched.address1 && errors.address1}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Address 2"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.address2}
-                  name="address2"
-                  error={!!touched.address2 && !!errors.address2}
-                  helperText={touched.address2 && errors.address2}
+                  value={values.description}
+                  name="description"
+                  error={!!touched.description && !!errors.description}
+                  helperText={touched.description && errors.description}
                   sx={{ gridColumn: "span 4" }}
                 />
 
@@ -171,7 +144,7 @@ const DistrictCreate = () => {
               </div>
               <Box display="flex" justifyContent="end" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">
-                  Create New User
+                  Create District
                 </Button>
               </Box>
             </form>
@@ -182,27 +155,13 @@ const DistrictCreate = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
-
 const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  contact: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+  name: yup.string().required("required"),
+  description: yup.string().required("required"),
 });
 const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  contact: "",
-  address1: "",
-  address2: "",
+  name: "",
+  description: "",
   images: [],
 };   
 
