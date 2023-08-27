@@ -145,7 +145,7 @@ const DistrictUpdate = () => {
                   >
                   <button className='bg-info' type='button' style={{borderRadius:'6px', padding:'6px'}}>Add Images</button>
                   </Upload>
-                  {selectedImages.length > 0 && (
+                  {selectedImages.length >= 0 && (
                     <div style={{ marginTop: '10px' }}>
                       <div style={{display:'flex', flexWrap:'wrap'}}>
                         {selectedImages.map((image, index) => (
@@ -166,10 +166,25 @@ const DistrictUpdate = () => {
                         </div>
                           
                         ))}
+                        
+                        <div style={{position:'relative', marginRight:'10px', marginBottom:'10px'}}>
+                          <img
+                            src={fetchedData.images.map((image)=>(image.imageUrl))}
+                            alt=""
+                            style={{ width: '166px', height:'110px', objectFit:'cover'}}
+                          />
+                          
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(index)} 
+                            style={{position:'absolute', right:'0', borderRadius:'50%', border:'none'}}
+                          >
+                            X
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
-                  <img src={fetchedData.images.map((image)=>(image.imageUrl))} alt="" style={{width:'50%'}} />
                   
               </div>
               <Box display="flex" justifyContent="end" mt="20px">
