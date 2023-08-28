@@ -69,7 +69,7 @@ const DistrictList = () => {
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{district.name}</td>
                     <td style={{padding:'12px'}}>
-                      <img src={district.images[0].imageUrl} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
+                      <img src={district.images[0].imageUrl!=null?district.images[0].imageUrl:""} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
                     </td>
                     <td className="descr" style={{padding:'12px'}}>{district.description}</td>
                     <td style={{padding:'12px'}}>{district.status}</td>
