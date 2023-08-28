@@ -25,6 +25,8 @@ import DistrictUpdate from './scenes/district/update';
 import { useParams } from "react-router-dom";
 import HotelList from './scenes/hotels/list';
 import HotelCreate from './scenes/hotels/create';
+import TourCreate from './scenes/tours/create';
+import TourList from './scenes/tours/list';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -52,6 +54,9 @@ function App() {
                 <Route path="/hotelList" element={<HotelList />} />
                 <Route path="/hotelCreate" element={<HotelCreate />} />
                 {/* <Route path="/districtUpdate/:id" element={<DistrictUpdate />} /> */}
+
+                <Route path="/TourList" element={<TourList />} />
+                <Route path="/TourCreate" element={<TourCreate />} />
 
                 <Route path="/form" element={<Form />} />
                 <Route path="/calendar" element={<Calendar />} />

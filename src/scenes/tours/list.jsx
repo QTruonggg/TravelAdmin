@@ -5,8 +5,8 @@ import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
 
 
-const DistrictList = () => {
-  const [districts, setDistricts] = useState([]);
+const TourList = () => {
+  const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -14,13 +14,13 @@ const DistrictList = () => {
   const endIndex = startIndex + itemsPerPage;
 
   
-  const displayedDistricts = districts.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(districts.length / itemsPerPage);
+  const displayedHotels = hotels.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(hotels.length / itemsPerPage);
   
   useEffect(() => {
-    axiosInstance("District", "GET")
+    axiosInstance("Tour", "GET")
       .then((response) => {
-        setDistricts(response.data);
+        setHotels(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -30,13 +30,13 @@ const DistrictList = () => {
 
 
   const handleDelete = (id) => {
-    axiosInstance(`ManageDistrict/${id}`, "DELETE")
+    axiosInstance(`ManageTour/${id}`, "DELETE")
       .then(() => {
-        setDistricts((prevDistricts) => prevDistricts.filter(district => district.id !== id));
+        setHotels((prevHotels) => prevHotels.filter(hotel => hotel.id !== id));
         console.log("xóa thành công");
       })
       .catch((error) => {
-        console.error("Error deleting district:", error);
+        console.error("Error deleting hotel:", error);
       });
   };
 
@@ -45,12 +45,12 @@ const DistrictList = () => {
         <div className="container">
           <Box m="20px">
             <Header
-            title="List District"
-            subtitle="List of District"
+            title="List Tours"
+            subtitle="List of Tours"
             />
-            <Link to={"/districtCreate"} style={{ margin: "24px 0" }}>
+            <Link to={"/hotelCreate"} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
-                Create District
+                Create Tour
               </button>
             </Link>
 
@@ -58,29 +58,38 @@ const DistrictList = () => {
               <thead>
                 <th style={{width:'5%', padding:'12px'}}>STT</th>
                 <th style={{width:'15%', padding:'12px'}}>Name</th>
+                <th style={{width:'15%', padding:'12px'}}>TravelDate</th>
+                <th style={{width:'15%', padding:'12px'}}>Person</th>
+                <th style={{width:'10%', padding:'12px'}}>Price</th>
                 <th style={{width:'25%', padding:'12px'}}>Image</th>
-                <th style={{width:'30%', padding:'12px'}}>Description</th>
+                {/* <th style={{width:'30%', padding:'12px'}}>Description</th> */}
                 <th style={{width:'5%', padding:'12px'}}>Status</th>
                 <th style={{width:'10%', textAlign:'center', padding:'12px'}}>Action</th>
               </thead>
               <tbody>
-              {displayedDistricts.map((district, index) => (
+              {displayedHotels.map((hotel, index) => (
                   <tr key={index}>
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{district.name}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.travelDate}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.person}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.price}</td>
+
+
                     <td style={{padding:'12px'}}>
-                      <img src={district.images[0].imageUrl!=null?district.images[0].imageUrl:""} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
+                      <img src={hotel.images[0].imageUrl} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
                     </td>
-                    <td className="descr" style={{padding:'12px'}}>{district.description}</td>
-                    <td style={{padding:'12px'}}>{district.status==1?"Active":"InActive"}</td>
+
+                    {/* <td className="descr" style={{padding:'12px'}}>{hotel.description}</td> */}
+                    <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
                     <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/districtUpdate/${district.id}`} style={{marginRight:'16px'}}>
+                        <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 
                         </Link>
-                        <button className="btn bg-danger" onClick={() => handleDelete(district.id)}>
+                        <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
                             <i class="fa-solid fa-trash-can" style={{fontSize:'20px'}}></i>
                         </button>
                     </td>
@@ -117,4 +126,4 @@ const DistrictList = () => {
      );
 }
  
-export default DistrictList;
+export default TourList;

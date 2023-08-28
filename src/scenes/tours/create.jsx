@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -8,15 +8,11 @@ import {  Upload } from 'antd';
 import axiosInstance from '../../utils/axiosInstance';
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { MenuItem } from "@mui/material";
 
-
-const HotelCreate = () => {
+const TourCreate = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
-
-  const [spotOptions, setSpotOptions] = useState([]);
 
   const handleFormSubmitHotel = async (values, { setSubmitting,resetForm }) => {
     try {
@@ -48,19 +44,6 @@ const HotelCreate = () => {
       setSubmitting(false);
     }
   };
-  useEffect(() => {
-    // Gọi API hoặc xử lý dữ liệu để lấy danh sách SpotId
-    const fetchSpotOptions = async () => {
-      try {
-        const response = await axiosInstance('ManageTouristSpot', 'GET'); // Ví dụ gọi API để lấy danh sách SpotId
-        setSpotOptions(response.data); // Cập nhật danh sách SpotId vào state
-      } catch (error) {
-        console.error('Error fetching spot options:', error);
-      }
-    };
-
-    fetchSpotOptions();
-  }, []);
 
   const handleImageUpload = ({ file }) => {
     setSelectedImages([...selectedImages, file]);
@@ -99,24 +82,18 @@ const HotelCreate = () => {
                 }}
               >
                 <TextField
-                fullWidth
-                variant="filled"
-                select
-                label="TouristSpot"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.SpotId}
-                name="SpotId"
-                error={!!touched.SpotId && !!errors.SpotId}
-                helperText={touched.SpotId && errors.SpotId}
-                sx={{ gridColumn: "span 1" }}
-              >
-                {spotOptions.map((spot) => (
-                  <MenuItem key={spot.id} value={spot.id}>
-                    {spot.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="SpotId"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.SpotId}
+                  name="SpotId"
+                  error={!!touched.SpotId && !!errors.SpotId}
+                  helperText={touched.SpotId && errors.SpotId}
+                  sx={{ gridColumn: "span 1" }}
+                />
 
                 <TextField
                   fullWidth
@@ -308,4 +285,4 @@ const initialValues = {
   images: [],
 };   
 
-export default HotelCreate;
+export default TourCreate;

@@ -72,7 +72,7 @@ const HotelList = () => {
                       <img src={hotel.images[0].imageUrl} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
                     </td>
                     <td className="descr" style={{padding:'12px'}}>{hotel.description}</td>
-                    <td style={{padding:'12px'}}>{hotel.status}</td>
+                    <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
                     <td style={{textAlign:'right', padding:'8px'}}>
                         <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
