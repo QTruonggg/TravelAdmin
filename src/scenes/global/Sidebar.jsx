@@ -183,6 +183,22 @@ const Sidebar = () => {
               </MenuItem>
             </SubMenu>
 
+            <SubMenu
+              title="Hotel"
+              icon={<CalendarTodayOutlinedIcon />}
+              onClick={() => setShowSubItems(!showSubItems)}
+            >
+              <MenuItem>
+                <Link to="/hotelList">List</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to="/hotelCreate">Create</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to="/hotelUpdate">Update</Link>
+              </MenuItem>
+            </SubMenu>
+
             <Item
               title="Profile Form"
               to="/form"
