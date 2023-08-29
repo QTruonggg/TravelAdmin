@@ -48,7 +48,7 @@ const TourList = () => {
             title="List Tours"
             subtitle="List of Tours"
             />
-            <Link to={"/hotelCreate"} style={{ margin: "24px 0" }}>
+            <Link to={"/TourCreate"} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
                 Create Tour
               </button>
@@ -59,7 +59,7 @@ const TourList = () => {
                 <th style={{width:'5%', padding:'12px'}}>STT</th>
                 <th style={{width:'15%', padding:'12px'}}>Name</th>
                 <th style={{width:'15%', padding:'12px'}}>TravelDate</th>
-                <th style={{width:'15%', padding:'12px'}}>Person</th>
+                <th style={{width:'15%', padding:'12px'}}>TravelType</th>
                 <th style={{width:'10%', padding:'12px'}}>Price</th>
                 <th style={{width:'25%', padding:'12px'}}>Image</th>
                 {/* <th style={{width:'30%', padding:'12px'}}>Description</th> */}
@@ -72,7 +72,7 @@ const TourList = () => {
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.travelDate}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.person}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.travelType}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.price}</td>
 
 

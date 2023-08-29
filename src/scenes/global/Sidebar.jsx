@@ -214,6 +214,54 @@ const Sidebar = () => {
               </MenuItem> */}
             </SubMenu>
 
+            <SubMenu
+              title="TouristSpot"
+              icon={<CalendarTodayOutlinedIcon />}
+              onClick={() => setShowSubItems(!showSubItems)}
+            >
+              <MenuItem>
+                <Link to="/TouristSpotList">List</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to="/TouristSpotCreate">Create</Link>
+              </MenuItem>
+              {/* <MenuItem>
+                <Link to="/TourUpdate">Update</Link>
+              </MenuItem> */}
+            </SubMenu>
+
+            <SubMenu
+              title="Resort"
+              icon={<CalendarTodayOutlinedIcon />}
+              onClick={() => setShowSubItems(!showSubItems)}
+            >
+              <MenuItem>
+                <Link to="/ResortList">List</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to="/ResortCreate">Create</Link>
+              </MenuItem>
+              {/* <MenuItem>
+                <Link to="/TourUpdate">Update</Link>
+              </MenuItem> */}
+            </SubMenu>
+
+            <SubMenu
+              title="Restaurant"
+              icon={<CalendarTodayOutlinedIcon />}
+              onClick={() => setShowSubItems(!showSubItems)}
+            >
+              <MenuItem>
+                <Link to="/RestaurantList">List</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to="/RestaurantCreate">Create</Link>
+              </MenuItem>
+              {/* <MenuItem>
+                <Link to="/TourUpdate">Update</Link>
+              </MenuItem> */}
+            </SubMenu>
+
             <Item
               title="Profile Form"
               to="/form"

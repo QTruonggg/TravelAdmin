@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import { useParams } from "react-router-dom";
 
 
-const HotelList = () => {
+const RoomList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { hotelId } = useParams(); // Lấy ID từ tham số URL
   const itemsPerPage = 6;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -18,7 +21,7 @@ const HotelList = () => {
   const totalPages = Math.ceil(hotels.length / itemsPerPage);
   
   useEffect(() => {
-    axiosInstance("Hotel", "GET")
+    axiosInstance(`ManageRoom/GetRoomByHotelId/${hotelId}`, "GET")
       .then((response) => {
         setHotels(response.data);
         console.log(response.data);
@@ -30,7 +33,7 @@ const HotelList = () => {
 
 
   const handleDelete = (id) => {
-    axiosInstance(`ManageHotel/${id}`, "DELETE")
+    axiosInstance(`ManageRoom/${id}`, "DELETE")
       .then(() => {
         setHotels((prevHotels) => prevHotels.filter(hotel => hotel.id !== id));
         console.log("xóa thành công");
@@ -45,12 +48,12 @@ const HotelList = () => {
         <div className="container">
           <Box m="20px">
             <Header
-            title="List Hotels"
-            subtitle="List of Hotels"
+            title="List Rooms"
+            subtitle="List of Rooms"
             />
-            <Link to={"/hotelCreate"} style={{ margin: "24px 0" }}>
+            <Link to={`/RoomCreate/${hotelId}`} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
-                Create Hotel
+                Create Room
               </button>
             </Link>
 
@@ -75,19 +78,15 @@ const HotelList = () => {
                     <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
                     <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
+                        {/* <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 
-                        </Link>
+                        </Link> */}
                         <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
                             <i class="fa-solid fa-trash-can" style={{fontSize:'20px'}}></i>
                         </button>
-                        <Link to={`/RoomList/${hotel.id}`} style={{marginRight:'16px'}}>
-                        <button style={{}} className="btn bg-success">
-                            <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Room
-                        </button> 
-                        </Link>
+                        
                     </td>
                   </tr>
                 ))}
@@ -122,4 +121,4 @@ const HotelList = () => {
      );
 }
  
-export default HotelList;
+export default RoomList;

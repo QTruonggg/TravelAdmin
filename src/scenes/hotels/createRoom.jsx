@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -9,28 +9,26 @@ import axiosInstance from '../../utils/axiosInstance';
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { MenuItem } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 
-const TourCreate = () => {
+const RoomCreate = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
-  const [spotOptions, setSpotOptions] = useState([]);
+  const { hotelId } = useParams(); // Lấy ID từ tham số URL
 
+  const [spotOptions, setSpotOptions] = useState([]);
 
   const handleFormSubmitHotel = async (values, { setSubmitting,resetForm }) => {
     try {
       console.log(values);
       const hotelData = new FormData();
-      hotelData.append("SpotId", values.SpotId);
+      hotelData.append("HotelId", hotelId);
       hotelData.append("name", values.name);
-      hotelData.append("TravelDate", values.TravelDate);
-      hotelData.append("Duration", values.Duration);
+      hotelData.append("Slot", values.Slot);
       hotelData.append("Sale", values.Sale);
       hotelData.append("Price", values.Price);
-      hotelData.append("TravelType", values.TravelType);
-      hotelData.append("Person", values.Person);
-
       hotelData.append("description", values.description);
 
       
@@ -39,7 +37,7 @@ const TourCreate = () => {
       }
   
       console.log(hotelData);
-      await axiosInstance('ManageTour', 'POST', hotelData);
+      await axiosInstance(`ManageRoom/`, 'POST', hotelData);
       alert("Ok")
       
       setSubmitting(false);
@@ -64,7 +62,6 @@ const TourCreate = () => {
     fetchSpotOptions();
   }, []);
 
-
   const handleImageUpload = ({ file }) => {
     setSelectedImages([...selectedImages, file]);
   };
@@ -77,7 +74,7 @@ const TourCreate = () => {
   return (
     <div className='container-lg mt-5'>
       <Box m="20px">
-        <Header title="Add Tour" subtitle="Create a new Tour" />
+        <Header title="Add Hotel" subtitle="Create a new Hotel" />
 
         <Formik
           onSubmit={handleFormSubmitHotel}
@@ -101,26 +98,8 @@ const TourCreate = () => {
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
-                <TextField
-                fullWidth
-                variant="filled"
-                select
-                label="TouristSpot"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.SpotId}
-                name="SpotId"
-                error={!!touched.SpotId && !!errors.SpotId}
-                helperText={touched.SpotId && errors.SpotId}
-                sx={{ gridColumn: "span 1" }}
-              >
-                {spotOptions.map((spot) => (
-                  <MenuItem key={spot.id} value={spot.id}>
-                    {spot.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-
+                
+                
                 <TextField
                   fullWidth
                   variant="filled"
@@ -133,35 +112,7 @@ const TourCreate = () => {
                   error={!!touched.name && !!errors.name}
                   helperText={touched.name && errors.name}
                   sx={{ gridColumn: "span 2" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="date"
-                  label="DTravelDateate"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.Rating}
-                  name="TravelDate"
-                  error={!!touched.TravelDate && !!errors.TravelDate}
-                  helperText={touched.TravelDate && errors.TravelDate}
-                  sx={{ gridColumn: "span 1" }}
-                />
-
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Duration"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.Rating}
-                  name="Duration"
-                  error={!!touched.Duration && !!errors.Duration}
-                  helperText={touched.Duration && errors.Duration}
-                  sx={{ gridColumn: "span 1" }}
-                />
-
+                />              
                 <TextField
                   fullWidth
                   variant="filled"
@@ -169,7 +120,7 @@ const TourCreate = () => {
                   label="Sale"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.Location}
+                  value={values.ContactNumber}
                   name="Sale"
                   error={!!touched.Sale && !!errors.Sale}
                   helperText={touched.Sale && errors.Sale}
@@ -182,40 +133,25 @@ const TourCreate = () => {
                   label="Price"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.Location}
+                  value={values.Price}
                   name="Price"
                   error={!!touched.Price && !!errors.Price}
                   helperText={touched.Price && errors.Price}
                   sx={{ gridColumn: "span 4" }}
                 />
-                
-                <TextField
+                                <TextField
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="TravelType"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.Address}
-                  name="TravelType"
-                  error={!!touched.TravelType && !!errors.TravelType}
-                  helperText={touched.TravelType && errors.TravelType}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Person"
+                  label="Slot"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.ContactNumber}
-                  name="Person"
-                  error={!!touched.Person && !!errors.Person}
-                  helperText={touched.Person && errors.Person}
+                  name="Slot"
+                  error={!!touched.Slot && !!errors.Slot}
+                  helperText={touched.Slot && errors.Slot}
                   sx={{ gridColumn: "span 4" }}
                 />
-                
                 <TextField
                   fullWidth
                   variant="filled"
@@ -308,14 +244,10 @@ const phoneRegExp =
   /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const checkoutSchema = yup.object().shape({
-  SpotId: yup.string().required("required"),
   name: yup.string().required("required"),
-  TravelDate: yup.string().required("required"),
-  Duration: yup.string().required("required"),
+  Slot: yup.string().required("required"),
   Sale: yup.string().required("required"),
-  Price: yup.string().required("required"),
-  TravelType: yup.string().required("required"),
-  Person: yup.string().required("required"),
+  Price: yup.number().required("required"),
   description: yup.string().required("required"),
 });
 const initialValues = {
@@ -324,4 +256,4 @@ const initialValues = {
   images: [],
 };   
 
-export default TourCreate;
+export default RoomCreate;

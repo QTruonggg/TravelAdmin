@@ -27,6 +27,14 @@ import HotelList from './scenes/hotels/list';
 import HotelCreate from './scenes/hotels/create';
 import TourCreate from './scenes/tours/create';
 import TourList from './scenes/tours/list';
+import TouristSpotList from './scenes/touristspot/list';
+import TouristSpotCreate from './scenes/touristspot/create';
+import ResortCreate from './scenes/resort/create';
+import ResortList from './scenes/resort/list';
+import RestaurantList from './scenes/restaurant/list';
+import RestaurantCreate from './scenes/restaurant/create';
+import RoomList from './scenes/hotels/listRoom';
+import RoomCreate from './scenes/hotels/createRoom';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -57,6 +65,18 @@ function App() {
 
                 <Route path="/TourList" element={<TourList />} />
                 <Route path="/TourCreate" element={<TourCreate />} />
+
+                <Route path="/TouristSpotList" element={<TouristSpotList />} />
+                <Route path="/TouristSpotCreate" element={<TouristSpotCreate />} />
+
+                <Route path="/ResortList" element={<ResortList />} />
+                <Route path="/ResortCreate" element={<ResortCreate />} />
+
+                <Route path="/RestaurantList" element={<RestaurantList />} />
+                <Route path="/RestaurantCreate" element={<RestaurantCreate />} />
+
+                <Route path="/RoomList/:hotelId" element={<RoomList />} />
+                <Route path="/RoomCreate/:hotelId" element={<RoomCreate />} />
 
                 <Route path="/form" element={<Form />} />
                 <Route path="/calendar" element={<Calendar />} />

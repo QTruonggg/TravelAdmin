@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
 
 
-const HotelList = () => {
+const RestaurantList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -18,7 +18,7 @@ const HotelList = () => {
   const totalPages = Math.ceil(hotels.length / itemsPerPage);
   
   useEffect(() => {
-    axiosInstance("Hotel", "GET")
+    axiosInstance("ManageRestaurant", "GET")
       .then((response) => {
         setHotels(response.data);
         console.log(response.data);
@@ -30,7 +30,7 @@ const HotelList = () => {
 
 
   const handleDelete = (id) => {
-    axiosInstance(`ManageHotel/${id}`, "DELETE")
+    axiosInstance(`ManageRestaurant/${id}`, "DELETE")
       .then(() => {
         setHotels((prevHotels) => prevHotels.filter(hotel => hotel.id !== id));
         console.log("xóa thành công");
@@ -45,12 +45,12 @@ const HotelList = () => {
         <div className="container">
           <Box m="20px">
             <Header
-            title="List Hotels"
-            subtitle="List of Hotels"
+            title="List Restaurant"
+            subtitle="List of Restaurant"
             />
-            <Link to={"/hotelCreate"} style={{ margin: "24px 0" }}>
+            <Link to={"/RestaurantCreate"} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
-                Create Hotel
+                Create Restaurant
               </button>
             </Link>
 
@@ -58,6 +58,8 @@ const HotelList = () => {
               <thead>
                 <th style={{width:'5%', padding:'12px'}}>STT</th>
                 <th style={{width:'15%', padding:'12px'}}>Name</th>
+                <th style={{width:'15%', padding:'12px'}}>CuisineType</th>
+
                 <th style={{width:'25%', padding:'12px'}}>Image</th>
                 <th style={{width:'30%', padding:'12px'}}>Description</th>
                 <th style={{width:'5%', padding:'12px'}}>Status</th>
@@ -68,6 +70,8 @@ const HotelList = () => {
                   <tr key={index}>
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.cuisineType}</td>
+
                     <td style={{padding:'12px'}}>
                       <img src={hotel.images[0].imageUrl} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
                     </td>
@@ -83,11 +87,6 @@ const HotelList = () => {
                         <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
                             <i class="fa-solid fa-trash-can" style={{fontSize:'20px'}}></i>
                         </button>
-                        <Link to={`/RoomList/${hotel.id}`} style={{marginRight:'16px'}}>
-                        <button style={{}} className="btn bg-success">
-                            <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Room
-                        </button> 
-                        </Link>
                     </td>
                   </tr>
                 ))}
@@ -122,4 +121,4 @@ const HotelList = () => {
      );
 }
  
-export default HotelList;
+export default RestaurantList;
