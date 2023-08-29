@@ -35,6 +35,9 @@ import RestaurantList from './scenes/restaurant/list';
 import RestaurantCreate from './scenes/restaurant/create';
 import RoomList from './scenes/hotels/listRoom';
 import RoomCreate from './scenes/hotels/createRoom';
+import Login from './scenes/login/login';
+import RoomListByResort from './scenes/resort/listRoom';
+import RoomCreateByResort from './scenes/resort/createRoom';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -50,7 +53,8 @@ function App() {
             {isSidebar && <Sidebar isSidebar={isSidebar} />}
             <Box flexGrow={1}>
               <Routes>
-                <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Login />} />
+                <Route path="/home" element={<Dashboard />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/invoices" element={<Invoices />} />
@@ -77,6 +81,12 @@ function App() {
 
                 <Route path="/RoomList/:hotelId" element={<RoomList />} />
                 <Route path="/RoomCreate/:hotelId" element={<RoomCreate />} />
+
+                <Route path="/RoomListByResort/:hotelId" element={<RoomListByResort />} />
+                <Route path="/RoomCreateByResort/:hotelId" element={<RoomCreateByResort />} />
+
+
+                
 
                 <Route path="/form" element={<Form />} />
                 <Route path="/calendar" element={<Calendar />} />
