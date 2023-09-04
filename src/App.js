@@ -25,6 +25,7 @@ import DistrictUpdate from './scenes/district/update';
 import { useParams } from "react-router-dom";
 import HotelList from './scenes/hotels/list';
 import HotelCreate from './scenes/hotels/create';
+import HotelUpdate from './scenes/hotels/update';
 import TourCreate from './scenes/tours/create';
 import TourList from './scenes/tours/list';
 import TouristSpotList from './scenes/touristspot/list';
@@ -65,7 +66,7 @@ function App() {
 
                 <Route path="/hotelList" element={<HotelList />} />
                 <Route path="/hotelCreate" element={<HotelCreate />} />
-                {/* <Route path="/districtUpdate/:id" element={<DistrictUpdate />} /> */}
+                <Route path="/HotelUpdate/:id" element={<HotelUpdate />} />
 
                 <Route path="/TourList" element={<TourList />} />
                 <Route path="/TourCreate" element={<TourCreate />} />

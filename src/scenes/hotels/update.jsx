@@ -9,67 +9,94 @@ import axiosInstance from '../../utils/axiosInstance';
 import { useParams } from "react-router-dom";
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { MenuItem } from "@mui/material";
 
-const DistrictUpdate = () => {
+
+const HotelUpdate = () => {
   const { id } = useParams(); 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
+  const [spotOptions, setSpotOptions] = useState(0);
 
-
- 
-
-  const [fetchedData, setFetchedData] = useState({ name: "", description: "", images: [] });
+  const [fetchedData, setFetchedData] = useState({ name: "",rating:"",location:"",address:"",contactNumber:"",price:"", description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
  const [initialValues, setInitialValues] = useState({
     name: fetchedData.name,
+    Rating:fetchedData.rating,
+    Location: fetchedData.location,
+    Address: fetchedData.address,
+    ContactNumber: fetchedData.contactNumber,
+    Price: fetchedData.price,
     description: fetchedData.description,
     images: fetchedData.images,
   });
 
   useEffect(() => {
     if (id) {
-      axiosInstance(`District/${id}`, "GET")
+      axiosInstance(`Hotel/${id}`, "GET")
         .then((response) => {
           const data = response.data;
           setFetchedData({
             name: data.name,
+            Rating: data.rating,
+            Location: data.location,
+            Address:data.address,
+            ContactNumber: data.contactNumber,
+            Price: data.price,
             description: data.description,
             images: data.images,
           });
+          setSpotOptions(data.spotId);
+
           setInitialValues({
             name: data.name,
+            Rating: data.rating,
+            Location: data.location,
+            Address:data.address,
+            ContactNumber: data.contactNumber,
+            Price: data.price,
             description: data.description,
             images: data.images,
           });
           setSelectedImages(data.images);
-
           const updatedImageIds = data.images.map((image) => image.id ? image.id : null);
           setSelectedImageIds(updatedImageIds);
+
         })
         .catch((error) => {
           console.error("Error fetching district data:", error);
         });
     }
   }, [id]);
+  console.log("iddddddđ",selectedImageIds);
+  console.log("111111111",id,spotOptions);
 
   const handleFormSubmitDistrict = async (values, { setSubmitting }) => {
+    
     try {
-      const districtData = new FormData();
-      districtData.append("name", values.name);
-      districtData.append("description", values.description);
+      
+      const hotelData = new FormData();
+      hotelData.append("Id", id);
+      hotelData.append("SpotId", spotOptions);
+      hotelData.append("name", values.name);
+      hotelData.append("rating", values.Rating);
+      hotelData.append("location", values.Location);
+      hotelData.append("address", values.Address);
+      hotelData.append("contactNumber", values.ContactNumber);
+      hotelData.append("price", values.Price);
+      hotelData.append("description", values.description);
       for (let i = 0; i < selectedImageIds.length; i++) {
-        districtData.append("images", selectedImageIds[i]);
+        hotelData.append("images", selectedImageIds[i]);
       };
-      console.log(selectedImageIds);
 
       for (let i = 0; i < selectedImages.length; i++) {
-        districtData.append("files", selectedImages[i]);
+        hotelData.append("files", selectedImages[i]);
       };
      
 
-      console.log(selectedImages);
-      await axiosInstance(`ManageDistrict/${id}`, 'PUT', districtData);
+      console.log("222222222222",hotelData);
+      await axiosInstance(`ManageHotel/${id}`, 'PUT', hotelData);
 
       setSubmitting(false);
       alert("done!!!!!!!!!!!")
@@ -78,7 +105,7 @@ const DistrictUpdate = () => {
       setSubmitting(false);
     }
   };
-
+  
   const handleImageUpload = ({ file }) => {
     setSelectedImages([...selectedImages, file]);
   };
@@ -89,7 +116,6 @@ const DistrictUpdate = () => {
     const updatedImageIds = updatedImages.map((image) => image.id ? image.id : null);
     setSelectedImageIds(updatedImageIds);
   };
-  console.log("iddddddđ",selectedImageIds);
 
   return (
     <div className='container-lg mt-5'>
@@ -119,7 +145,27 @@ const DistrictUpdate = () => {
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
-                <TextField
+                {/* <TextField
+                fullWidth
+                variant="filled"
+                select
+                label="TouristSpot"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.SpotId || initialValues.SpotId}
+                name="SpotId"
+                error={!!touched.SpotId && !!errors.SpotId}
+                helperText={touched.SpotId && errors.SpotId}
+                sx={{ gridColumn: "span 1" }}
+              >
+                {spotOptions.map((spot) => (
+                  <MenuItem key={spot.id} value={spot.id}>
+                    {spot.name}
+                  </MenuItem>
+                ))}
+              </TextField> */}
+
+              <TextField
                   fullWidth
                   variant="filled"
                   type="text"
@@ -132,6 +178,75 @@ const DistrictUpdate = () => {
                   helperText={touched.name && errors.name}
                   sx={{ gridColumn: "span 4" }}
                 />
+
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Rating"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.Rating || initialValues.Rating}
+                  name="Rating"
+                  error={!!touched.Rating && !!errors.Rating}
+                  helperText={touched.Rating && errors.Rating}
+                  sx={{ gridColumn: "span 1" }}
+                />
+
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Location"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.Location || initialValues.Location}
+                  name="Location"
+                  error={!!touched.Location && !!errors.Location}
+                  helperText={touched.Location && errors.Location}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Address"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.Address || initialValues.Address}
+                  name="Address"
+                  error={!!touched.Address && !!errors.Address}
+                  helperText={touched.Address && errors.Address}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="ContactNumber"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.ContactNumber || initialValues.ContactNumber}
+                  name="ContactNumber"
+                  error={!!touched.ContactNumber && !!errors.ContactNumber}
+                  helperText={touched.ContactNumber && errors.ContactNumber}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Price"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.Price || initialValues.Price}
+                  name="Price"
+                  error={!!touched.Price && !!errors.Price}
+                  helperText={touched.Price && errors.Price}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                
                 <TextField
                   fullWidth
                   variant="filled"
@@ -151,20 +266,16 @@ const DistrictUpdate = () => {
                   editor={ ClassicEditor }
                   data={values.description} 
                    onReady={ editor => {
-                      console.log( 'Editor is ready to use!', editor );
                   } }
                   onChange={ ( event, editor ) => {
                       const data = editor.getData();
                       handleChange({
                         target: { name: "description", value: data }
                       });
-                      console.log( { event, editor, data } );
                   } }
                   onBlur={ ( event, editor ) => {
-                      console.log( 'Blur.', editor );
                   } }
                   onFocus={ ( event, editor ) => {
-                      console.log( 'Focus.', editor );
                   } }
                 />
               </div>
@@ -214,8 +325,8 @@ const DistrictUpdate = () => {
 };
 
 const checkoutSchema = yup.object().shape({
-  name: yup.string().required("required"),
-  description: yup.string().required("required"),
+  name: yup.string(),
+  description: yup.string(),
 });
 
-export default DistrictUpdate;
+export default HotelUpdate;
