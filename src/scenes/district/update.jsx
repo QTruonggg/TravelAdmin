@@ -19,10 +19,11 @@ const DistrictUpdate = () => {
 
  
 
-  const [fetchedData, setFetchedData] = useState({ name: "", description: "", images: [] });
+  const [fetchedData, setFetchedData] = useState({ name: "",location:"", description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
  const [initialValues, setInitialValues] = useState({
     name: fetchedData.name,
+    location:fetchedData.location,
     description: fetchedData.description,
     images: fetchedData.images,
   });
@@ -34,11 +35,13 @@ const DistrictUpdate = () => {
           const data = response.data;
           setFetchedData({
             name: data.name,
+            location:data.location,
             description: data.description,
             images: data.images,
           });
           setInitialValues({
             name: data.name,
+            location:data.location,
             description: data.description,
             images: data.images,
           });
@@ -57,6 +60,7 @@ const DistrictUpdate = () => {
     try {
       const districtData = new FormData();
       districtData.append("name", values.name);
+      districtData.append("Location", values.location);
       districtData.append("description", values.description);
       for (let i = 0; i < selectedImageIds.length; i++) {
         districtData.append("images", selectedImageIds[i]);
@@ -130,6 +134,19 @@ const DistrictUpdate = () => {
                   name="name"
                   error={!!touched.name && !!errors.name}
                   helperText={touched.name && errors.name}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Location"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.location || initialValues.location}
+                  name="location"
+                  error={!!touched.location && !!errors.location}
+                  helperText={touched.location && errors.location}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
@@ -214,8 +231,9 @@ const DistrictUpdate = () => {
 };
 
 const checkoutSchema = yup.object().shape({
-  name: yup.string().required("required"),
-  description: yup.string().required("required"),
+  name: yup.string(),
+  location: yup.string(),
+  description: yup.string()
 });
 
 export default DistrictUpdate;

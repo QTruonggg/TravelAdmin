@@ -69,13 +69,24 @@ const TouristSpotList = () => {
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
                     <td style={{padding:'12px'}}>
-                      <img src={hotel.images[0].imageUrl} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
-                    </td>
+                    {hotel.images[0] && hotel.images[0].imageUrl ? (
+                      <img
+                        src={hotel.images[0].imageUrl}
+                        alt="images"
+                        style={{width:'100%', height:'150px', objectFit:'cover'}}
+                      />
+                    ) : (
+                      <img
+                        src={""} 
+                        alt="No image"
+                        style={{width:'100%', height:'150px', objectFit:'cover'}}
+                      />
+                    )}                      </td>
                     <td className="descr" style={{padding:'12px'}}>{hotel.description}</td>
                     <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
                     <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
+                        <Link to={`/SpotUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 

@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import { useParams } from "react-router-dom";
 
 
-const ResortList = () => {
+const PlanList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { hotelId } = useParams(); // Lấy ID từ tham số URL
   const itemsPerPage = 6;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -18,7 +21,7 @@ const ResortList = () => {
   const totalPages = Math.ceil(hotels.length / itemsPerPage);
   
   useEffect(() => {
-    axiosInstance("ManageResort", "GET")
+    axiosInstance(`TravelPlan/GetByTourId/${hotelId}`, "GET")
       .then((response) => {
         setHotels(response.data);
         console.log(response.data);
@@ -30,7 +33,7 @@ const ResortList = () => {
 
 
   const handleDelete = (id) => {
-    axiosInstance(`ManageResort/${id}`, "DELETE")
+    axiosInstance(`TravelPlan/${id}`, "DELETE")
       .then(() => {
         setHotels((prevHotels) => prevHotels.filter(hotel => hotel.id !== id));
         console.log("xóa thành công");
@@ -45,60 +48,40 @@ const ResortList = () => {
         <div className="container">
           <Box m="20px">
             <Header
-            title="List Resorts"
-            subtitle="List of Resorts"
+            title="List Plans"
+            subtitle="List of Plans"
             />
-            <Link to={"/ResortCreate"} style={{ margin: "24px 0" }}>
+            <Link to={`/PlanCreate/${hotelId}`} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
-                Create Resort
+                Create Plan
               </button>
             </Link>
 
             <table className="table" style={{marginTop:'24px'}}>
               <thead>
                 <th style={{width:'5%', padding:'12px'}}>STT</th>
-                <th style={{width:'15%', padding:'12px'}}>Name</th>
-                <th style={{width:'25%', padding:'12px'}}>Image</th>
+                <th style={{width:'15%', padding:'12px'}}>Title</th>
                 <th style={{width:'30%', padding:'12px'}}>Description</th>
-                <th style={{width:'5%', padding:'12px'}}>Status</th>
                 <th style={{width:'10%', textAlign:'center', padding:'12px'}}>Action</th>
               </thead>
               <tbody>
               {displayedHotels.map((hotel, index) => (
                   <tr key={index}>
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
-                    <td style={{padding:'12px'}}>
-                    {hotel.images[0] && hotel.images[0].imageUrl ? (
-                      <img
-                        src={hotel.images[0].imageUrl}
-                        alt="images"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
-                      />
-                    ) : (
-                      <img
-                        src={""} 
-                        alt="No image"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
-                      />
-                    )}                     </td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.title}</td>
+                    
                     <td className="descr" style={{padding:'12px'}}>{hotel.description}</td>
-                    <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
                     <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/ResortUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
+                        {/* <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 
-                        </Link>
+                        </Link> */}
                         <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
                             <i class="fa-solid fa-trash-can" style={{fontSize:'20px'}}></i>
                         </button>
-                        <Link to={`/RoomListByResort/${hotel.id}`} style={{marginRight:'16px'}}>
-                        <button style={{}} className="btn bg-success">
-                            <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Room
-                        </button> 
-                        </Link>
+                        
                     </td>
                   </tr>
                 ))}
@@ -133,4 +116,4 @@ const ResortList = () => {
      );
 }
  
-export default ResortList;
+export default PlanList;

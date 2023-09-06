@@ -12,55 +12,57 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { MenuItem } from "@mui/material";
 
 
-const HotelUpdate = () => {
+const RestaurantUpdate = () => {
   const { id } = useParams(); 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [spotOptions, setSpotOptions] = useState(0);
 
-  const [fetchedData, setFetchedData] = useState({spotId:0, name: "",rating:"",location:"",address:"",contactNumber:"",price:"", description: "", images: [] });
+  const [fetchedData, setFetchedData] = useState({spotId: 0, name: "",location: "",cuisineType: "",address: "",contactNumber: "",price: 0, description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
  const [initialValues, setInitialValues] = useState({
-    name: fetchedData.name,
-    Rating:fetchedData.rating,
-    location: fetchedData.location,
-    address: fetchedData.address,
-    ContactNumber: fetchedData.contactNumber,
-    Price: fetchedData.price,
-    description: fetchedData.description,
-    images: fetchedData.images,
+        name: fetchedData.name,
+        location: fetchedData.location,
+        cuisineType: fetchedData.cuisineType,
+        address:fetchedData.address,
+        contactNumber: fetchedData.contactNumber,
+        price: fetchedData.price,
+        description: fetchedData.description,
+        images: fetchedData.images,
   });
+ 
 
-  useEffect(() => {
+  useEffect(async () => {
     if (id) {
-      axiosInstance(`Hotel/${id}`, "GET")
+     await axiosInstance(`ManageRestaurant/${id}`, "GET")
         .then((response) => {
           const data = response.data;
           setFetchedData({
-            spotId: data.spotId,
             name: data.name,
-            Rating: data.rating,
             location: data.location,
+            cuisineType: data.cuisineType,
             address:data.address,
-            ContactNumber: data.contactNumber,
-            Price: data.price,
+            contactNumber: data.contactNumber,
+            price: data.price,
             description: data.description,
             images: data.images,
           });
           setSpotOptions(data.spotId);
 
+          console.log("111111111111", response.data);
+
           setInitialValues({
-            spotId: data.spotId,
             name: data.name,
-            Rating: data.rating,
             location: data.location,
+            cuisineType: data.cuisineType,
             address:data.address,
-            ContactNumber: data.contactNumber,
-            Price: data.price,
+            contactNumber: data.contactNumber,
+            price: data.price,
             description: data.description,
             images: data.images,
-          });
+          })
+
           setSelectedImages(data.images);
           const updatedImageIds = data.images.map((image) => image.id ? image.id : null);
           setSelectedImageIds(updatedImageIds);
@@ -71,8 +73,6 @@ const HotelUpdate = () => {
         });
     }
   }, [id]);
-  console.log("iddddddđ",selectedImageIds);
-  console.log("111111111",id,spotOptions);
 
   const handleFormSubmitDistrict = async (values, { setSubmitting }) => {
     
@@ -82,11 +82,11 @@ const HotelUpdate = () => {
       hotelData.append("Id", id);
       hotelData.append("SpotId", spotOptions);
       hotelData.append("name", values.name);
-      hotelData.append("location", values.location);
-      hotelData.append("rating", values.Rating);
-      hotelData.append("address", values.address);
-      hotelData.append("contactNumber", values.ContactNumber);
-      hotelData.append("price", values.Price);
+      hotelData.append("Location", values.location);
+      hotelData.append("CuisineType", values.cuisineType);
+      hotelData.append("Address", values.address);
+      hotelData.append("ContactNumber", values.contactNumber);
+      hotelData.append("Price", values.price);
       hotelData.append("description", values.description);
       for (let i = 0; i < selectedImageIds.length; i++) {
         hotelData.append("images", selectedImageIds[i]);
@@ -98,7 +98,7 @@ const HotelUpdate = () => {
      
 
       console.log("222222222222",hotelData);
-      await axiosInstance(`ManageHotel/${id}`, 'PUT', hotelData);
+      await axiosInstance(`ManageRestaurant/${id}`, 'PUT', hotelData);
 
       setSubmitting(false);
       alert("done!!!!!!!!!!!")
@@ -147,25 +147,7 @@ const HotelUpdate = () => {
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
-                {/* <TextField
-                fullWidth
-                variant="filled"
-                select
-                label="TouristSpot"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.SpotId || initialValues.SpotId}
-                name="SpotId"
-                error={!!touched.SpotId && !!errors.SpotId}
-                helperText={touched.SpotId && errors.SpotId}
-                sx={{ gridColumn: "span 1" }}
-              >
-                {spotOptions.map((spot) => (
-                  <MenuItem key={spot.id} value={spot.id}>
-                    {spot.name}
-                  </MenuItem>
-                ))}
-              </TextField> */}
+                
 
               <TextField
                   fullWidth
@@ -185,13 +167,13 @@ const HotelUpdate = () => {
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="Rating"
+                  label="Location"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.Rating || initialValues.Rating}
-                  name="Rating"
-                  error={!!touched.Rating && !!errors.Rating}
-                  helperText={touched.Rating && errors.Rating}
+                  value={values.location || initialValues.location}
+                  name="location"
+                  error={!!touched.location && !!errors.location}
+                  helperText={touched.location && errors.location}
                   sx={{ gridColumn: "span 1" }}
                 />
 
@@ -199,13 +181,13 @@ const HotelUpdate = () => {
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="location"
+                  label="CuisineType"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.location || initialValues.location}
-                  name="location"
-                  error={!!touched.location && !!errors.location}
-                  helperText={touched.location && errors.location}
+                  value={values.cuisineType || initialValues.cuisineType}
+                  name="cuisineType"
+                  error={!!touched.cuisineType && !!errors.cuisineType}
+                  helperText={touched.cuisineType && errors.cuisineType}
                   sx={{ gridColumn: "span 4" }}
                 />
                 
@@ -213,7 +195,7 @@ const HotelUpdate = () => {
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="address"
+                  label="Address"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.address || initialValues.address}
@@ -229,12 +211,13 @@ const HotelUpdate = () => {
                   label="ContactNumber"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.ContactNumber || initialValues.ContactNumber}
-                  name="ContactNumber"
-                  error={!!touched.ContactNumber && !!errors.ContactNumber}
-                  helperText={touched.ContactNumber && errors.ContactNumber}
+                  value={values.contactNumber || initialValues.contactNumber}
+                  name="contactNumber"
+                  error={!!touched.contactNumber && !!errors.contactNumber}
+                  helperText={touched.contactNumber && errors.contactNumber}
                   sx={{ gridColumn: "span 4" }}
                 />
+               
                 <TextField
                   fullWidth
                   variant="filled"
@@ -242,13 +225,12 @@ const HotelUpdate = () => {
                   label="Price"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.Price || initialValues.Price}
-                  name="Price"
-                  error={!!touched.Price && !!errors.Price}
-                  helperText={touched.Price && errors.Price}
+                  value={values.price || initialValues.price}
+                  name="price"
+                  error={!!touched.price && !!errors.price}
+                  helperText={touched.price && errors.price}
                   sx={{ gridColumn: "span 4" }}
                 />
-                
                 <TextField
                   fullWidth
                   variant="filled"
@@ -336,4 +318,4 @@ const checkoutSchema = yup.object().shape({
   description: yup.string(),
 });
 
-export default HotelUpdate;
+export default RestaurantUpdate;

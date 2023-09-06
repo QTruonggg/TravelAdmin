@@ -28,12 +28,18 @@ import HotelCreate from './scenes/hotels/create';
 import HotelUpdate from './scenes/hotels/update';
 import TourCreate from './scenes/tours/create';
 import TourList from './scenes/tours/list';
+import TourUpdate from './scenes/tours/update';
+import PlanList from './scenes/tours/listPlan';
+import PlanCreate from './scenes/tours/createPlan';
 import TouristSpotList from './scenes/touristspot/list';
 import TouristSpotCreate from './scenes/touristspot/create';
+import SpotUpdate from './scenes/touristspot/update';
 import ResortCreate from './scenes/resort/create';
 import ResortList from './scenes/resort/list';
+import ResortUpdate from './scenes/resort/update';
 import RestaurantList from './scenes/restaurant/list';
 import RestaurantCreate from './scenes/restaurant/create';
+import RestaurantUpdate from './scenes/restaurant/update';
 import RoomList from './scenes/hotels/listRoom';
 import RoomCreate from './scenes/hotels/createRoom';
 import Login from './scenes/login/login';
@@ -70,15 +76,26 @@ function App() {
 
                 <Route path="/TourList" element={<TourList />} />
                 <Route path="/TourCreate" element={<TourCreate />} />
+                <Route path="/PlanList/:hotelId" element={<PlanList />} />
+                <Route path="/PlanCreate/:hotelId" element={<PlanCreate />} />
+                <Route path="/TourUpdate/:id" element={<TourUpdate />} />
+
+
 
                 <Route path="/TouristSpotList" element={<TouristSpotList />} />
                 <Route path="/TouristSpotCreate" element={<TouristSpotCreate />} />
+                <Route path="/SpotUpdate/:id" element={<SpotUpdate />} />
+
 
                 <Route path="/ResortList" element={<ResortList />} />
                 <Route path="/ResortCreate" element={<ResortCreate />} />
+                <Route path="/ResortUpdate/:id" element={<ResortUpdate />} />
+
 
                 <Route path="/RestaurantList" element={<RestaurantList />} />
                 <Route path="/RestaurantCreate" element={<RestaurantCreate />} />
+                <Route path="/RestaurantUpdate/:id" element={<RestaurantUpdate />} />
+
 
                 <Route path="/RoomList/:hotelId" element={<RoomList />} />
                 <Route path="/RoomCreate/:hotelId" element={<RoomCreate />} />

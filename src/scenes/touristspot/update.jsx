@@ -9,96 +9,76 @@ import axiosInstance from '../../utils/axiosInstance';
 import { useParams } from "react-router-dom";
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { MenuItem } from "@mui/material";
 
-
-const HotelUpdate = () => {
+const SpotUpdate = () => {
   const { id } = useParams(); 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
-  const [spotOptions, setSpotOptions] = useState(0);
 
-  const [fetchedData, setFetchedData] = useState({spotId:0, name: "",rating:"",location:"",address:"",contactNumber:"",price:"", description: "", images: [] });
+
+ 
+
+  const [fetchedData, setFetchedData] = useState({districtId:"", name: "",location:"", description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
  const [initialValues, setInitialValues] = useState({
+    districtId:fetchedData.districtId,
     name: fetchedData.name,
-    Rating:fetchedData.rating,
-    location: fetchedData.location,
-    address: fetchedData.address,
-    ContactNumber: fetchedData.contactNumber,
-    Price: fetchedData.price,
+    location:fetchedData.location,
     description: fetchedData.description,
     images: fetchedData.images,
   });
 
   useEffect(() => {
     if (id) {
-      axiosInstance(`Hotel/${id}`, "GET")
+      axiosInstance(`ManageTouristSpot/${id}`, "GET")
         .then((response) => {
           const data = response.data;
           setFetchedData({
-            spotId: data.spotId,
+            districtId: data.districtId,
             name: data.name,
-            Rating: data.rating,
-            location: data.location,
-            address:data.address,
-            ContactNumber: data.contactNumber,
-            Price: data.price,
+            location:data.location,
             description: data.description,
             images: data.images,
           });
-          setSpotOptions(data.spotId);
-
           setInitialValues({
-            spotId: data.spotId,
+            districtId: data.districtId,
             name: data.name,
-            Rating: data.rating,
-            location: data.location,
-            address:data.address,
-            ContactNumber: data.contactNumber,
-            Price: data.price,
+            location:data.location,
             description: data.description,
             images: data.images,
           });
           setSelectedImages(data.images);
+
           const updatedImageIds = data.images.map((image) => image.id ? image.id : null);
           setSelectedImageIds(updatedImageIds);
-
         })
         .catch((error) => {
           console.error("Error fetching district data:", error);
         });
     }
   }, [id]);
-  console.log("iddddddđ",selectedImageIds);
-  console.log("111111111",id,spotOptions);
 
   const handleFormSubmitDistrict = async (values, { setSubmitting }) => {
-    
     try {
-      
-      const hotelData = new FormData();
-      hotelData.append("Id", id);
-      hotelData.append("SpotId", spotOptions);
-      hotelData.append("name", values.name);
-      hotelData.append("location", values.location);
-      hotelData.append("rating", values.Rating);
-      hotelData.append("address", values.address);
-      hotelData.append("contactNumber", values.ContactNumber);
-      hotelData.append("price", values.Price);
-      hotelData.append("description", values.description);
+      const districtData = new FormData();
+      districtData.append("Id", id);
+      // districtData.append("DistrictId", 1);
+      districtData.append("name", values.name);
+      districtData.append("Location", values.location);
+      districtData.append("description", values.description);
       for (let i = 0; i < selectedImageIds.length; i++) {
-        hotelData.append("images", selectedImageIds[i]);
+        districtData.append("images", selectedImageIds[i]);
       };
+      console.log(selectedImageIds);
 
       for (let i = 0; i < selectedImages.length; i++) {
-        hotelData.append("files", selectedImages[i]);
+        districtData.append("files", selectedImages[i]);
       };
      
 
-      console.log("222222222222",hotelData);
-      await axiosInstance(`ManageHotel/${id}`, 'PUT', hotelData);
+      console.log(selectedImages);
+      await axiosInstance(`ManageTouristSpot/${id}`, 'PUT', districtData);
 
       setSubmitting(false);
       alert("done!!!!!!!!!!!")
@@ -107,7 +87,7 @@ const HotelUpdate = () => {
       setSubmitting(false);
     }
   };
-  
+
   const handleImageUpload = ({ file }) => {
     setSelectedImages([...selectedImages, file]);
   };
@@ -118,6 +98,7 @@ const HotelUpdate = () => {
     const updatedImageIds = updatedImages.map((image) => image.id ? image.id : null);
     setSelectedImageIds(updatedImageIds);
   };
+  console.log("iddddddđ",selectedImageIds);
 
   return (
     <div className='container-lg mt-5'>
@@ -147,27 +128,7 @@ const HotelUpdate = () => {
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
-                {/* <TextField
-                fullWidth
-                variant="filled"
-                select
-                label="TouristSpot"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.SpotId || initialValues.SpotId}
-                name="SpotId"
-                error={!!touched.SpotId && !!errors.SpotId}
-                helperText={touched.SpotId && errors.SpotId}
-                sx={{ gridColumn: "span 1" }}
-              >
-                {spotOptions.map((spot) => (
-                  <MenuItem key={spot.id} value={spot.id}>
-                    {spot.name}
-                  </MenuItem>
-                ))}
-              </TextField> */}
-
-              <TextField
+                <TextField
                   fullWidth
                   variant="filled"
                   type="text"
@@ -180,26 +141,11 @@ const HotelUpdate = () => {
                   helperText={touched.name && errors.name}
                   sx={{ gridColumn: "span 4" }}
                 />
-
                 <TextField
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="Rating"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.Rating || initialValues.Rating}
-                  name="Rating"
-                  error={!!touched.Rating && !!errors.Rating}
-                  helperText={touched.Rating && errors.Rating}
-                  sx={{ gridColumn: "span 1" }}
-                />
-
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="location"
+                  label="Location"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.location || initialValues.location}
@@ -208,47 +154,6 @@ const HotelUpdate = () => {
                   helperText={touched.location && errors.location}
                   sx={{ gridColumn: "span 4" }}
                 />
-                
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="address"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.address || initialValues.address}
-                  name="address"
-                  error={!!touched.address && !!errors.address}
-                  helperText={touched.address && errors.address}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="ContactNumber"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.ContactNumber || initialValues.ContactNumber}
-                  name="ContactNumber"
-                  error={!!touched.ContactNumber && !!errors.ContactNumber}
-                  helperText={touched.ContactNumber && errors.ContactNumber}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Price"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.Price || initialValues.Price}
-                  name="Price"
-                  error={!!touched.Price && !!errors.Price}
-                  helperText={touched.Price && errors.Price}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                
                 <TextField
                   fullWidth
                   variant="filled"
@@ -268,16 +173,20 @@ const HotelUpdate = () => {
                   editor={ ClassicEditor }
                   data={values.description} 
                    onReady={ editor => {
+                      console.log( 'Editor is ready to use!', editor );
                   } }
                   onChange={ ( event, editor ) => {
                       const data = editor.getData();
                       handleChange({
                         target: { name: "description", value: data }
                       });
+                      console.log( { event, editor, data } );
                   } }
                   onBlur={ ( event, editor ) => {
+                      console.log( 'Blur.', editor );
                   } }
                   onFocus={ ( event, editor ) => {
+                      console.log( 'Focus.', editor );
                   } }
                 />
               </div>
@@ -328,12 +237,8 @@ const HotelUpdate = () => {
 
 const checkoutSchema = yup.object().shape({
   name: yup.string(),
-  // Rating: yup.string(),
-  // location: yup.string(),
-  // address: yup.string(),
-  // ContactNumber: yup.string(),
-  // Price: yup.string(),
-  description: yup.string(),
+  location: yup.string(),
+  description: yup.string()
 });
 
-export default HotelUpdate;
+export default SpotUpdate;

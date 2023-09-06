@@ -15,6 +15,7 @@ const DistrictCreate = () => {
     try {
       const districtData = new FormData();
       districtData.append("name", values.name);
+       districtData.append("location", values.location);
       districtData.append("description", values.description);
       
       for (let i = 0; i < selectedImages.length; i++) {
@@ -87,6 +88,19 @@ const DistrictCreate = () => {
                   fullWidth
                   variant="filled"
                   type="text"
+                  label="Location"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.location}
+                  name="location"
+                  error={!!touched.location && !!errors.location}
+                  helperText={touched.location && errors.location}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
                   label="Description"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -147,6 +161,7 @@ const DistrictCreate = () => {
 
 const checkoutSchema = yup.object().shape({
   name: yup.string().required("required"),
+  location: yup.string().required("required"),
   description: yup.string().required("required"),
 });
 const initialValues = {

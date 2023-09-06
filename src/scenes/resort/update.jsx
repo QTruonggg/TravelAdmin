@@ -12,18 +12,18 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { MenuItem } from "@mui/material";
 
 
-const HotelUpdate = () => {
+const ResortUpdate = () => {
   const { id } = useParams(); 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [spotOptions, setSpotOptions] = useState(0);
 
-  const [fetchedData, setFetchedData] = useState({spotId:0, name: "",rating:"",location:"",address:"",contactNumber:"",price:"", description: "", images: [] });
+  const [fetchedData, setFetchedData] = useState({spotId:0, name: "",cacilities:"",location:"",address:"",contactNumber:"",price:"", description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
  const [initialValues, setInitialValues] = useState({
     name: fetchedData.name,
-    Rating:fetchedData.rating,
+    cacilities:fetchedData.cacilities,
     location: fetchedData.location,
     address: fetchedData.address,
     ContactNumber: fetchedData.contactNumber,
@@ -34,13 +34,13 @@ const HotelUpdate = () => {
 
   useEffect(() => {
     if (id) {
-      axiosInstance(`Hotel/${id}`, "GET")
+      axiosInstance(`ManageResort/${id}`, "GET")
         .then((response) => {
           const data = response.data;
           setFetchedData({
-            spotId: data.spotId,
+           
             name: data.name,
-            Rating: data.rating,
+            cacilities: data.cacilities,
             location: data.location,
             address:data.address,
             ContactNumber: data.contactNumber,
@@ -51,9 +51,9 @@ const HotelUpdate = () => {
           setSpotOptions(data.spotId);
 
           setInitialValues({
-            spotId: data.spotId,
+           
             name: data.name,
-            Rating: data.rating,
+            cacilities: data.cacilities,
             location: data.location,
             address:data.address,
             ContactNumber: data.contactNumber,
@@ -83,7 +83,7 @@ const HotelUpdate = () => {
       hotelData.append("SpotId", spotOptions);
       hotelData.append("name", values.name);
       hotelData.append("location", values.location);
-      hotelData.append("rating", values.Rating);
+      hotelData.append("cacilities", values.cacilities);
       hotelData.append("address", values.address);
       hotelData.append("contactNumber", values.ContactNumber);
       hotelData.append("price", values.Price);
@@ -98,7 +98,7 @@ const HotelUpdate = () => {
      
 
       console.log("222222222222",hotelData);
-      await axiosInstance(`ManageHotel/${id}`, 'PUT', hotelData);
+      await axiosInstance(`ManageResort/${id}`, 'PUT', hotelData);
 
       setSubmitting(false);
       alert("done!!!!!!!!!!!")
@@ -185,13 +185,13 @@ const HotelUpdate = () => {
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="Rating"
+                  label="cacilities"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.Rating || initialValues.Rating}
-                  name="Rating"
-                  error={!!touched.Rating && !!errors.Rating}
-                  helperText={touched.Rating && errors.Rating}
+                  value={values.cacilities || initialValues.cacilities}
+                  name="cacilities"
+                  error={!!touched.cacilities && !!errors.cacilities}
+                  helperText={touched.cacilities && errors.cacilities}
                   sx={{ gridColumn: "span 1" }}
                 />
 
@@ -336,4 +336,4 @@ const checkoutSchema = yup.object().shape({
   description: yup.string(),
 });
 
-export default HotelUpdate;
+export default ResortUpdate;
