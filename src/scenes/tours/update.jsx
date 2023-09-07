@@ -19,7 +19,7 @@ const TourUpdate = () => {
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [spotOptions, setSpotOptions] = useState(0);
 
-  const [fetchedData, setFetchedData] = useState({ name: "",travelDate:  new Date(),duration: "",sale: 0,price: 0,travelType: "",person: 0, description: "", images: [] });
+  const [fetchedData, setFetchedData] = useState({ spotId:0, name: "",travelDate:  new Date(),duration: "",sale: 0,price: 0,travelType: "",person: 0, description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
  const [initialValues, setInitialValues] = useState({
         name: fetchedData.name,
@@ -32,20 +32,7 @@ const TourUpdate = () => {
         description: fetchedData.description,
         images: fetchedData.images,
   });
-  useEffect(() => {
-    const formattedTravelDate = new Date(fetchedData.travelDate).toISOString().split('T')[0];
-    setInitialValues({
-      name: fetchedData.name,
-      travelDate: formattedTravelDate,
-      duration: fetchedData.duration,
-      sale: fetchedData.sale,
-      price: fetchedData.price,
-      travelType: fetchedData.travelType,
-      person: fetchedData.person,
-      description: fetchedData.description,
-      images: fetchedData.images,
-    });
-  }, [fetchedData]);
+  
 
   useEffect(async () => {
     if (id) {
@@ -63,9 +50,18 @@ const TourUpdate = () => {
             description: data.description,
             images: data.images,
           });
-          
-          console.log("111111111111", response.data);
-
+          setSpotOptions(data.spotId);
+          setInitialValues({
+            name: data.name,
+            travelDate: data.travelDate,
+            duration: data.duration,
+            sale:data.sale,
+            price: data.price,
+            travelType: data.travelType,
+            person: data.person,
+            description: data.description,
+            images: data.images,
+          });
           setSelectedImages(data.images);
           const updatedImageIds = data.images.map((image) => image.id ? image.id : null);
           setSelectedImageIds(updatedImageIds);
@@ -83,14 +79,15 @@ const TourUpdate = () => {
       
       const hotelData = new FormData();
       hotelData.append("Id", id);
-      hotelData.append("name", values.name);
-      hotelData.append("TravelDate", values.travelDate);
-      hotelData.append("Duration", values.duration);
-      hotelData.append("Sale", values.sale);
-      hotelData.append("Price", values.price);
-      hotelData.append("TravelType", values.travelType);
-      hotelData.append("Person", values.person);
-      hotelData.append("description", values.description);
+      hotelData.append("SpotId", spotOptions);
+      hotelData.append("name", values.name || initialValues.name);
+      hotelData.append("TravelDate", values.travelDate || initialValues.travelDate);
+      hotelData.append("Duration", values.duration || initialValues.duration);
+      hotelData.append("Sale", values.sale || initialValues.sale);
+      hotelData.append("Price", values.price || initialValues.price);
+      hotelData.append("TravelType", values.travelType || initialValues.travelType);
+      hotelData.append("Person", values.person || initialValues.person);
+      hotelData.append("description", values.description || initialValues.description);
       for (let i = 0; i < selectedImageIds.length; i++) {
         hotelData.append("images", selectedImageIds[i]);
       };

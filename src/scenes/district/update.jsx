@@ -16,6 +16,7 @@ const DistrictUpdate = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
 
+  const [nameT, setNameT] = useState();
 
  
 
@@ -59,9 +60,9 @@ const DistrictUpdate = () => {
   const handleFormSubmitDistrict = async (values, { setSubmitting }) => {
     try {
       const districtData = new FormData();
-      districtData.append("name", values.name);
-      districtData.append("Location", values.location);
-      districtData.append("description", values.description);
+      districtData.append("name", values.name || initialValues.name);
+      districtData.append("Location", values.location || initialValues.location);
+      districtData.append("description", values.description || initialValues.description);
       for (let i = 0; i < selectedImageIds.length; i++) {
         districtData.append("images", selectedImageIds[i]);
       };
@@ -142,7 +143,7 @@ const DistrictUpdate = () => {
                   type="text"
                   label="Location"
                   onBlur={handleBlur}
-                  onChange={handleChange}
+                  onChange={(handleChange)}
                   value={values.location || initialValues.location}
                   name="location"
                   error={!!touched.location && !!errors.location}

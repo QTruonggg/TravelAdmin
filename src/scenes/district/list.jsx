@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext,useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import UserContext from "../../store/context";
 
 const DistrictList = () => {
+  const {state,dispatch} = useContext(UserContext);
   const [districts, setDistricts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,10 +20,12 @@ const DistrictList = () => {
   };
 
   useEffect(() => {
-    axiosInstance("District", "GET")
+    dispatch({type:"SHOW_LOADING"});
+    axiosInstance("ManageDistrict", "GET")
       .then((response) => {
         setDistricts(response.data);
         console.log(response.data);
+        dispatch({type:"HIDE_LOADING"});
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -101,9 +105,11 @@ const DistrictList = () => {
                       <i class="fa-solid fa-pen-to-square" style={{ fontSize: "20px" }}></i> update
                     </button>
                   </Link>
-                  <button className="btn bg-danger" onClick={() => handleDelete(district.id)}>
-                    <i class="fa-solid fa-trash-can" style={{ fontSize: "20px" }}></i>
-                  </button>
+                  {district.status === 1 && ( // Conditionally render the delete button
+                          <button className="btn bg-danger" onClick={() => handleDelete(district.id)}>
+                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
+                          </button>
+                        )}
                 </td>
               </tr>
             ))}

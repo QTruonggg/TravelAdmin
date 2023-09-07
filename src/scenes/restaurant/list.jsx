@@ -8,15 +8,18 @@ import axiosInstance from "../../utils/axiosInstance";
 const RestaurantList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const itemsPerPage = 6;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
   
-  const displayedHotels = hotels.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(hotels.length / itemsPerPage);
-  
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   useEffect(() => {
     axiosInstance("ManageRestaurant", "GET")
       .then((response) => {
@@ -40,6 +43,12 @@ const RestaurantList = () => {
       });
   };
 
+  const filteredDistricts = hotels.filter((district) =>
+    district.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const displayedHotels = filteredDistricts.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredDistricts.length / itemsPerPage);
 
     return ( 
         <div className="container">
@@ -53,6 +62,12 @@ const RestaurantList = () => {
                 Create Restaurant
               </button>
             </Link>
+            <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
 
             <table className="table" style={{marginTop:'24px'}}>
               <thead>
@@ -95,9 +110,11 @@ const RestaurantList = () => {
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 
                         </Link>
-                        <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
-                            <i class="fa-solid fa-trash-can" style={{fontSize:'20px'}}></i>
-                        </button>
+                        {hotel.status === 1 && ( // Conditionally render the delete button
+                          <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
+                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
+                          </button>
+                        )}
                     </td>
                   </tr>
                 ))}

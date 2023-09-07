@@ -6,92 +6,61 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import {  Upload } from 'antd';
 import axiosInstance from '../../utils/axiosInstance';
-import { useParams } from "react-router-dom";
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { MenuItem } from "@mui/material";
+import { useParams } from "react-router-dom";
 
-const SpotUpdate = () => {
-  const { id } = useParams(); 
+
+const VehicleCreate = () => {
+
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedImageIds, setSelectedImageIds] = useState([]);
-  const [spotOptions, setSpotOptions] = useState(0);
+  const { hotelId } = useParams(); // Lấy ID từ tham số URL
 
+  const [spotOptions, setSpotOptions] = useState([]);
 
-
- 
-
-  const [fetchedData, setFetchedData] = useState({districtId:0, name: "",location:"", description: "", images: [] });
-  // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
- const [initialValues, setInitialValues] = useState({
-    districtId:fetchedData.districtId,
-    name: fetchedData.name,
-    location:fetchedData.location,
-    description: fetchedData.description,
-    images: fetchedData.images,
-  });
-
-  useEffect(() => {
-    if (id) {
-      axiosInstance(`ManageTouristSpot/${id}`, "GET")
-        .then((response) => {
-          const data = response.data;
-          setFetchedData({
-            districtId: data.districtId,
-            name: data.name,
-            location:data.location,
-            description: data.description,
-            images: data.images,
-          });
-
-          setSpotOptions(data.districtId);
-
-          setInitialValues({
-            districtId: data.districtId,
-            name: data.name,
-            location:data.location,
-            description: data.description,
-            images: data.images,
-          });
-          setSelectedImages(data.images);
-
-          const updatedImageIds = data.images.map((image) => image.id ? image.id : null);
-          setSelectedImageIds(updatedImageIds);
-        })
-        .catch((error) => {
-          console.error("Error fetching district data:", error);
-        });
-    }
-  }, [id]);
-
-  const handleFormSubmitDistrict = async (values, { setSubmitting }) => {
+  const handleFormSubmitHotel = async (values, { setSubmitting,resetForm }) => {
     try {
-      const districtData = new FormData();
-      districtData.append("Id", id);
-      districtData.append("DistrictId", spotOptions);
-      districtData.append("name", values.name || initialValues.name);
-      districtData.append("Location", values.location || initialValues.location);
-      districtData.append("description", values.description || initialValues.description);
-      for (let i = 0; i < selectedImageIds.length; i++) {
-        districtData.append("images", selectedImageIds[i]);
-      };
-      console.log(selectedImageIds);
+      console.log(values);
+      const hotelData = new FormData();
+      hotelData.append("HotelId", hotelId);
+      hotelData.append("name", values.name);
+      hotelData.append("Slot", values.Slot);
+      hotelData.append("Sale", values.Sale);
+      hotelData.append("Price", values.Price);
+      hotelData.append("description", values.description);
 
+      
       for (let i = 0; i < selectedImages.length; i++) {
-        districtData.append("files", selectedImages[i]);
-      };
-     
-
-      console.log(selectedImages);
-      await axiosInstance(`ManageTouristSpot/${id}`, 'PUT', districtData);
-
+        hotelData.append("images", selectedImages[i]);
+      }
+  
+      console.log(hotelData);
+      await axiosInstance(`ManageRoom/`, 'POST', hotelData);
+      alert("Ok")
+      
       setSubmitting(false);
-      alert("done!!!!!!!!!!!")
+      setSelectedImages([]); 
+      resetForm(); 
     } catch (error) {
-      console.error('Error updating district data:', error);
+      console.error('Error submitting form:', error);
       setSubmitting(false);
     }
   };
+  useEffect(() => {
+    // Gọi API hoặc xử lý dữ liệu để lấy danh sách SpotId
+    const fetchSpotOptions = async () => {
+      try {
+        const response = await axiosInstance('ManageTouristSpot', 'GET'); // Ví dụ gọi API để lấy danh sách SpotId
+        setSpotOptions(response.data); // Cập nhật danh sách SpotId vào state
+      } catch (error) {
+        console.error('Error fetching spot options:', error);
+      }
+    };
+
+    fetchSpotOptions();
+  }, []);
 
   const handleImageUpload = ({ file }) => {
     setSelectedImages([...selectedImages, file]);
@@ -100,18 +69,15 @@ const SpotUpdate = () => {
   const handleRemoveImage = (index) => {
     const updatedImages = selectedImages.filter((_, i) => i !== index);
     setSelectedImages(updatedImages);
-    const updatedImageIds = updatedImages.map((image) => image.id ? image.id : null);
-    setSelectedImageIds(updatedImageIds);
   };
-  console.log("iddddddđ",selectedImageIds);
 
   return (
     <div className='container-lg mt-5'>
       <Box m="20px">
-        <Header title="Update District" subtitle="Update a district" />
+        <Header title="Add Hotel" subtitle="Create a new Hotel" />
 
         <Formik
-          onSubmit={handleFormSubmitDistrict}
+          onSubmit={handleFormSubmitHotel}
           initialValues={initialValues}
           validationSchema={checkoutSchema}
         >
@@ -122,7 +88,6 @@ const SpotUpdate = () => {
             handleBlur,
             handleChange,
             handleSubmit,
-            isSubmitting,
           }) => (
             <form onSubmit={handleSubmit}>
               <Box
@@ -133,6 +98,8 @@ const SpotUpdate = () => {
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
+                
+                
                 <TextField
                   fullWidth
                   variant="filled"
@@ -140,23 +107,49 @@ const SpotUpdate = () => {
                   label="Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.name || initialValues.name}
+                  value={values.name}
                   name="name"
                   error={!!touched.name && !!errors.name}
                   helperText={touched.name && errors.name}
+                  sx={{ gridColumn: "span 2" }}
+                />              
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Sale"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.ContactNumber}
+                  name="Sale"
+                  error={!!touched.Sale && !!errors.Sale}
+                  helperText={touched.Sale && errors.Sale}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="Location"
+                  label="Price"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.location || initialValues.location}
-                  name="location"
-                  error={!!touched.location && !!errors.location}
-                  helperText={touched.location && errors.location}
+                  value={values.Price}
+                  name="Price"
+                  error={!!touched.Price && !!errors.Price}
+                  helperText={touched.Price && errors.Price}
+                  sx={{ gridColumn: "span 4" }}
+                />
+                                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Slot"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.ContactNumber}
+                  name="Slot"
+                  error={!!touched.Slot && !!errors.Slot}
+                  helperText={touched.Slot && errors.Slot}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
@@ -166,12 +159,17 @@ const SpotUpdate = () => {
                   label="Description"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.description || initialValues.description}
+                  value={values.description}
                   name="description"
                   error={!!touched.description && !!errors.description}
                   helperText={touched.description && errors.description}
                   sx={{ gridColumn: "span 4" }}
                 />
+
+                
+                
+
+
               </Box>
               <div style={{color:'black'}}>
                 <CKEditor
@@ -201,16 +199,16 @@ const SpotUpdate = () => {
                     customRequest={handleImageUpload}
                     showUploadList={false}
                     multiple
-                >
+                  >
                   <button className='bg-info' type='button' style={{borderRadius:'6px', padding:'6px'}}>Add Images</button>
-                </Upload>
-                {selectedImages.length > 0 && (
-                  <div style={{ marginTop: '10px' }}>
-                    <div style={{display:'flex', flexWrap:'wrap'}}>
-                      {selectedImages.map((image, index) => (
-                        <div key={index} style={{position:'relative', marginRight:'10px', marginBottom:'10px'}}>
+                  </Upload>
+                  {selectedImages.length > 0 && (
+                    <div style={{ marginTop: '10px' }}>
+                      <div style={{display:'flex', flexWrap:'wrap'}}>
+                        {selectedImages.map((image, index) => (
+                          <div key={index} style={{position:'relative', marginRight:'10px', marginBottom:'10px'}}>
                           <img
-                            src={image.imageUrl?image.imageUrl:URL.createObjectURL(image)}
+                            src={URL.createObjectURL(image)}
                             alt={`Selected ${index}`}
                             style={{ width: '166px', height:'110px', objectFit:'cover'}}
                           />
@@ -222,28 +220,40 @@ const SpotUpdate = () => {
                             X
                           </button>
                         </div>
-                      ))}
+                          
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
               <Box display="flex" justifyContent="end" mt="20px">
-                <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
-                  {isSubmitting ? 'Updating...' : 'Update District'}
+                <Button type="submit" color="secondary" variant="contained">
+                  Create Hotel
                 </Button>
               </Box>
             </form>
           )}
         </Formik>
       </Box>
+      
     </div>
   );
 };
 
-const checkoutSchema = yup.object().shape({
-  name: yup.string(),
-  location: yup.string(),
-  description: yup.string()
-});
+const phoneRegExp =
+  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
-export default SpotUpdate;
+const checkoutSchema = yup.object().shape({
+  name: yup.string().required("required"),
+  Slot: yup.string().required("required"),
+  Sale: yup.string().required("required"),
+  Price: yup.number().required("required"),
+  description: yup.string().required("required"),
+});
+const initialValues = {
+  name: "",
+  description: "",
+  images: [],
+};   
+
+export default VehicleCreate;

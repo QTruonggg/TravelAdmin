@@ -3,25 +3,25 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import { useParams } from "react-router-dom";
 
 
-const TouristSpotList = () => {
+const VehicleList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
 
+  const { hotelId } = useParams(); // Lấy ID từ tham số URL
   const itemsPerPage = 6;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
   
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
+  const displayedHotels = hotels.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(hotels.length / itemsPerPage);
+  
   useEffect(() => {
-    axiosInstance("ManageTouristSpot", "GET")
+    axiosInstance(`ManageRoom/GetRoomByHotelId/${hotelId}`, "GET")
       .then((response) => {
         setHotels(response.data);
         console.log(response.data);
@@ -33,7 +33,7 @@ const TouristSpotList = () => {
 
 
   const handleDelete = (id) => {
-    axiosInstance(`ManageTouristSpot/${id}`, "DELETE")
+    axiosInstance(`ManageRoom/${id}`, "DELETE")
       .then(() => {
         setHotels((prevHotels) => prevHotels.filter(hotel => hotel.id !== id));
         console.log("xóa thành công");
@@ -42,32 +42,20 @@ const TouristSpotList = () => {
         console.error("Error deleting hotel:", error);
       });
   };
-  const filteredDistricts = hotels.filter((district) =>
-    district.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const displayedHotels = filteredDistricts.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredDistricts.length / itemsPerPage);
 
 
     return ( 
         <div className="container">
           <Box m="20px">
             <Header
-            title="List TouristSpot"
-            subtitle="List of TouristSpot"
+            title="List Rooms"
+            subtitle="List of Rooms"
             />
-            <Link to={"/TouristSpotCreate"} style={{ margin: "24px 0" }}>
+            <Link to={`/RoomCreate/${hotelId}`} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
-                Create TouristSpot
+                Create Vehicle
               </button>
             </Link>
-            <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
 
             <table className="table" style={{marginTop:'24px'}}>
               <thead>
@@ -84,33 +72,21 @@ const TouristSpotList = () => {
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
                     <td style={{padding:'12px'}}>
-                    {hotel.images[0] && hotel.images[0].imageUrl ? (
-                      <img
-                        src={hotel.images[0].imageUrl}
-                        alt="images"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
-                      />
-                    ) : (
-                      <img
-                        src={""} 
-                        alt="No image"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
-                      />
-                    )}                      </td>
+                      <img src={hotel.images[0].imageUrl} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
+                    </td>
                     <td className="descr" style={{padding:'12px'}}>{hotel.description}</td>
                     <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
                     <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/SpotUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
+                        {/* <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 
-                        </Link>
-                        {hotel.status === 1 && ( // Conditionally render the delete button
-                          <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
-                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
-                          </button>
-                        )}
+                        </Link> */}
+                        <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
+                            <i class="fa-solid fa-trash-can" style={{fontSize:'20px'}}></i>
+                        </button>
+                        
                     </td>
                   </tr>
                 ))}
@@ -145,4 +121,4 @@ const TouristSpotList = () => {
      );
 }
  
-export default TouristSpotList;
+export default VehicleList;

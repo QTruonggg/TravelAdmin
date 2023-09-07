@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
 
 
-const TouristSpotList = () => {
+const FeedbackList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,10 +18,9 @@ const TouristSpotList = () => {
   
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
-  };
-
+  };  
   useEffect(() => {
-    axiosInstance("ManageTouristSpot", "GET")
+    axiosInstance("Feedback", "GET")
       .then((response) => {
         setHotels(response.data);
         console.log(response.data);
@@ -33,7 +32,7 @@ const TouristSpotList = () => {
 
 
   const handleDelete = (id) => {
-    axiosInstance(`ManageTouristSpot/${id}`, "DELETE")
+    axiosInstance(`ManageTour/${id}`, "DELETE")
       .then(() => {
         setHotels((prevHotels) => prevHotels.filter(hotel => hotel.id !== id));
         console.log("xóa thành công");
@@ -43,7 +42,7 @@ const TouristSpotList = () => {
       });
   };
   const filteredDistricts = hotels.filter((district) =>
-    district.name.toLowerCase().includes(searchQuery.toLowerCase())
+    district.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const displayedHotels = filteredDistricts.slice(startIndex, endIndex);
@@ -54,17 +53,17 @@ const TouristSpotList = () => {
         <div className="container">
           <Box m="20px">
             <Header
-            title="List TouristSpot"
-            subtitle="List of TouristSpot"
+            title="List Vehicle"
+            subtitle="List of Vehicle"
             />
-            <Link to={"/TouristSpotCreate"} style={{ margin: "24px 0" }}>
+            {/* <Link to={"/TourCreate"} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
-                Create TouristSpot
+                Create Tour
               </button>
-            </Link>
+            </Link> */}
             <input
           type="text"
-          placeholder="Search by name..."
+          placeholder="Search by email..."
           value={searchQuery}
           onChange={handleSearchChange}
         />
@@ -73,9 +72,10 @@ const TouristSpotList = () => {
               <thead>
                 <th style={{width:'5%', padding:'12px'}}>STT</th>
                 <th style={{width:'15%', padding:'12px'}}>Name</th>
-                <th style={{width:'25%', padding:'12px'}}>Image</th>
-                <th style={{width:'30%', padding:'12px'}}>Description</th>
-                <th style={{width:'5%', padding:'12px'}}>Status</th>
+                <th style={{width:'15%', padding:'12px'}}>Email</th>
+                <th style={{width:'15%', padding:'12px'}}>Content</th>
+                <th style={{width:'10%', padding:'12px'}}>createdAt</th>
+                {/* <th style={{width:'30%', padding:'12px'}}>Description</th> */}
                 <th style={{width:'10%', textAlign:'center', padding:'12px'}}>Action</th>
               </thead>
               <tbody>
@@ -83,34 +83,30 @@ const TouristSpotList = () => {
                   <tr key={index}>
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
-                    <td style={{padding:'12px'}}>
-                    {hotel.images[0] && hotel.images[0].imageUrl ? (
-                      <img
-                        src={hotel.images[0].imageUrl}
-                        alt="images"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
-                      />
-                    ) : (
-                      <img
-                        src={""} 
-                        alt="No image"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
-                      />
-                    )}                      </td>
-                    <td className="descr" style={{padding:'12px'}}>{hotel.description}</td>
-                    <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.email}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.content}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.createdAt}</td>
+
+
+                    
+
+                    {/* <td className="descr" style={{padding:'12px'}}>{hotel.description}</td> */}
+                    {/* <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td> */}
 
                     <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/SpotUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
+                        <Link to={`/TourUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
                         <button style={{}} className="btn bg-success">
-                            <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
+                            <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Reply
                         </button> 
                         </Link>
-                        {hotel.status === 1 && ( // Conditionally render the delete button
-                          <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
-                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
-                          </button>
-                        )}
+                        {/* <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
+                            <i class="fa-solid fa-trash-can" style={{fontSize:'20px'}}></i>
+                        </button>
+                        <Link to={`/PlanList/${hotel.id}`} style={{marginRight:'16px'}}>
+                        <button style={{}} className="btn bg-success">
+                            <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Plan
+                        </button> 
+                        </Link> */}
                     </td>
                   </tr>
                 ))}
@@ -145,4 +141,4 @@ const TouristSpotList = () => {
      );
 }
  
-export default TouristSpotList;
+export default FeedbackList;

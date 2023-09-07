@@ -81,13 +81,13 @@ const HotelUpdate = () => {
       const hotelData = new FormData();
       hotelData.append("Id", id);
       hotelData.append("SpotId", spotOptions);
-      hotelData.append("name", values.name);
-      hotelData.append("location", values.location);
-      hotelData.append("rating", values.Rating);
-      hotelData.append("address", values.address);
-      hotelData.append("contactNumber", values.ContactNumber);
-      hotelData.append("price", values.Price);
-      hotelData.append("description", values.description);
+      hotelData.append("name", values.name || initialValues.name);
+      hotelData.append("location", values.location || initialValues.location);
+      hotelData.append("rating", values.Rating || initialValues.Rating);
+      hotelData.append("address", values.address || initialValues.address);
+      hotelData.append("contactNumber", values.ContactNumber || initialValues.ContactNumber);
+      hotelData.append("price", values.Price || initialValues.Price);
+      hotelData.append("description", values.description || initialValues.description);
       for (let i = 0; i < selectedImageIds.length; i++) {
         hotelData.append("images", selectedImageIds[i]);
       };

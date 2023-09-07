@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useReducer, useState } from 'react';
 import { Box } from "@mui/material";
 import Team from "./scenes/team";
-import { useState } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import { Routes, Route } from "react-router-dom";
@@ -29,6 +28,8 @@ import HotelUpdate from './scenes/hotels/update';
 import TourCreate from './scenes/tours/create';
 import TourList from './scenes/tours/list';
 import TourUpdate from './scenes/tours/update';
+import VehicleCreate from './scenes/tours/createVehicle';
+import VehicleList from './scenes/tours/listVehicle';
 import PlanList from './scenes/tours/listPlan';
 import PlanCreate from './scenes/tours/createPlan';
 import TouristSpotList from './scenes/touristspot/list';
@@ -45,12 +46,35 @@ import RoomCreate from './scenes/hotels/createRoom';
 import Login from './scenes/login/login';
 import RoomListByResort from './scenes/resort/listRoom';
 import RoomCreateByResort from './scenes/resort/createRoom';
+import FeedbackList from './scenes/feedback/list';
+
+import { UserProvider } from './store/context';
+import reducer from './store/reducer'
+import INIT_STATE from './store/initState';
 
 function App() {
+  const localState = localStorage.getItem("state")?JSON.parse(localStorage.getItem("state")):INIT_STATE;
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+  const [state,dispatch] = useReducer(reducer,localState);
+  const styles = {
+    backgroundImage:"url(https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921)",
+    width:"100%",
+    height:"100%",
+    position:"fixed",
+    top:0,
+    left:0,
+    backgroundColor:"#000000",
+    opacity:0.8,
+    zIndex:100,
+    backgroundRepeat:"no-repeat",
+    backgroundPosition:"center center",
+    display: state.isLoading?"block":"none"
+  }
 
   return (
+    <UserProvider value={{state,dispatch}}>
+      <div id='loading' style={styles}></div>
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -79,6 +103,9 @@ function App() {
                 <Route path="/PlanList/:hotelId" element={<PlanList />} />
                 <Route path="/PlanCreate/:hotelId" element={<PlanCreate />} />
                 <Route path="/TourUpdate/:id" element={<TourUpdate />} />
+                <Route path="/VehicleList/:hotelId" element={<VehicleList />} />
+                <Route path="/VehicleCreate/:hotelId" element={<VehicleCreate />} />
+
 
 
 
@@ -103,6 +130,9 @@ function App() {
                 <Route path="/RoomListByResort/:hotelId" element={<RoomListByResort />} />
                 <Route path="/RoomCreateByResort/:hotelId" element={<RoomCreateByResort />} />
 
+                <Route path="/FeedbackList" element={<FeedbackList />} />
+
+
 
                 
 
@@ -119,6 +149,7 @@ function App() {
         </div>
       </ThemeProvider>
     </ColorModeContext.Provider>
+    </UserProvider>
   );
 }
 
