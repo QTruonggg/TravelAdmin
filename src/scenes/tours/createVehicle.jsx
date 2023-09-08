@@ -24,10 +24,9 @@ const VehicleCreate = () => {
     try {
       console.log(values);
       const hotelData = new FormData();
-      hotelData.append("HotelId", hotelId);
+      hotelData.append("TourId", hotelId);
       hotelData.append("name", values.name);
-      hotelData.append("Slot", values.Slot);
-      hotelData.append("Sale", values.Sale);
+      hotelData.append("Type", values.Type);
       hotelData.append("Price", values.Price);
       hotelData.append("description", values.description);
 
@@ -37,7 +36,7 @@ const VehicleCreate = () => {
       }
   
       console.log(hotelData);
-      await axiosInstance(`ManageRoom/`, 'POST', hotelData);
+      await axiosInstance(`ManageVehicle/`, 'POST', hotelData);
       alert("Ok")
       
       setSubmitting(false);
@@ -74,7 +73,7 @@ const VehicleCreate = () => {
   return (
     <div className='container-lg mt-5'>
       <Box m="20px">
-        <Header title="Add Hotel" subtitle="Create a new Hotel" />
+        <Header title="Add Vehicle" subtitle="Create a new Vehicle" />
 
         <Formik
           onSubmit={handleFormSubmitHotel}
@@ -117,13 +116,13 @@ const VehicleCreate = () => {
                   fullWidth
                   variant="filled"
                   type="text"
-                  label="Sale"
+                  label="Type"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.ContactNumber}
+                  value={values.Type}
                   name="Sale"
-                  error={!!touched.Sale && !!errors.Sale}
-                  helperText={touched.Sale && errors.Sale}
+                  error={!!touched.Type && !!errors.Type}
+                  helperText={touched.Type && errors.Type}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
@@ -137,19 +136,6 @@ const VehicleCreate = () => {
                   name="Price"
                   error={!!touched.Price && !!errors.Price}
                   helperText={touched.Price && errors.Price}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                                <TextField
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Slot"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.ContactNumber}
-                  name="Slot"
-                  error={!!touched.Slot && !!errors.Slot}
-                  helperText={touched.Slot && errors.Slot}
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
@@ -228,7 +214,7 @@ const VehicleCreate = () => {
               </div>
               <Box display="flex" justifyContent="end" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">
-                  Create Hotel
+                  Create Vehicle
                 </Button>
               </Box>
             </form>

@@ -21,7 +21,7 @@ const VehicleList = () => {
   const totalPages = Math.ceil(hotels.length / itemsPerPage);
   
   useEffect(() => {
-    axiosInstance(`ManageRoom/GetRoomByHotelId/${hotelId}`, "GET")
+    axiosInstance(`ManageVehicle/GetByTourId/${hotelId}`, "GET")
       .then((response) => {
         setHotels(response.data);
         console.log(response.data);
@@ -33,7 +33,7 @@ const VehicleList = () => {
 
 
   const handleDelete = (id) => {
-    axiosInstance(`ManageRoom/${id}`, "DELETE")
+    axiosInstance(`ManageVehicle/${id}`, "DELETE")
       .then(() => {
         setHotels((prevHotels) => prevHotels.filter(hotel => hotel.id !== id));
         console.log("xóa thành công");
@@ -48,8 +48,8 @@ const VehicleList = () => {
         <div className="container">
           <Box m="20px">
             <Header
-            title="List Rooms"
-            subtitle="List of Rooms"
+            title="List Vehicle"
+            subtitle="List of Vehicle"
             />
             <Link to={`/RoomCreate/${hotelId}`} style={{ margin: "24px 0" }}>
               <button className="btn btn-success">
