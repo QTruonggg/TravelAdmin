@@ -19,7 +19,7 @@ const TourUpdate = () => {
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [spotOptions, setSpotOptions] = useState(0);
 
-  const [fetchedData, setFetchedData] = useState({ spotId:0, name: "",travelDate:  new Date(),duration: "",sale: 0,price: 0,travelType: "",person: 0, description: "", images: [] });
+  const [fetchedData, setFetchedData] = useState({ spotId:0, name: "",travelDate:"",duration: "",sale: 0,price: 0,travelType: "",person: 0, description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
  const [initialValues, setInitialValues] = useState({
         name: fetchedData.name,
@@ -97,7 +97,6 @@ const TourUpdate = () => {
       };
      
 
-      console.log("222222222222",hotelData);
       await axiosInstance(`Managetour/${id}`, 'PUT', hotelData);
 
       setSubmitting(false);
@@ -107,6 +106,7 @@ const TourUpdate = () => {
       setSubmitting(false);
     }
   };
+  console.log("2222222",spotOptions)
   
   const handleImageUpload = ({ file }) => {
     setSelectedImages([...selectedImages, file]);
