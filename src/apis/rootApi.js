@@ -1,1 +1,1 @@
-export const API_URL = "http://localhost:5220/api"
+export const API_URL = "https://travelapiservicesss.azurewebsites.net/api"
