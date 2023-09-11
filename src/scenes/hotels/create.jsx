@@ -9,10 +9,12 @@ import axiosInstance from '../../utils/axiosInstance';
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { MenuItem } from "@mui/material";
+import Topbar from '../global/Topbar';
+import Sidebar from '../global/Sidebar';
 
 
 const HotelCreate = () => {
-
+  const [isSidebar, setIsSidebar] = useState(true);
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
 
@@ -72,6 +74,12 @@ const HotelCreate = () => {
   };
 
   return (
+    <>
+    <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex", height:'90vh' }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
     <div className='container-lg mt-5'>
       <Box m="20px">
         <Header title="Add Hotel" subtitle="Create a new Hotel" />
@@ -284,6 +292,10 @@ const HotelCreate = () => {
       </Box>
       
     </div>
+    </Box>
+    </main>
+        </div>
+    </>
   );
 };
 

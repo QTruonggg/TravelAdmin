@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import Topbar from "../global/Topbar";
+import Sidebar from "../global/Sidebar";
 
 
 const TourList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSidebar, setIsSidebar] = useState(true);
 
   const itemsPerPage = 6;
 
@@ -50,6 +53,12 @@ const TourList = () => {
 
 
     return ( 
+      <>
+      <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex" }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
         <div className="container">
           <Box m="20px">
             <Header
@@ -61,11 +70,14 @@ const TourList = () => {
                 Create Tour
               </button>
             </Link>
+            <br />
+        <label htmlFor="">Search: </label>
             <input
           type="text"
           placeholder="Search by name..."
           value={searchQuery}
           onChange={handleSearchChange}
+          style={{marginLeft:'12px', marginTop: "24px", width:'30%', padding:'8px', borderRadius:'8px' }}
         />
 
             <table className="table" style={{marginTop:'24px'}}>
@@ -83,52 +95,54 @@ const TourList = () => {
               <tbody>
               {displayedHotels.map((hotel, index) => (
                   <tr key={index}>
-                    <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.travelDate}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.travelType}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.price}</td>
+                    <td style={{padding:'16px'}}>{startIndex + index + 1}</td>
+                    <td style={{padding:'16px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
+                    <td style={{padding:'16px', fontWeight:'bold', fontSize:'16px'}}>{hotel.travelDate}</td>
+                    <td style={{padding:'16px', fontWeight:'bold', fontSize:'16px'}}>{hotel.travelType}</td>
+                    <td style={{padding:'16px', fontWeight:'bold', fontSize:'16px'}}>{hotel.price}</td>
 
 
-                    <td style={{padding:'12px'}}>
+                    <td style={{padding:'16px'}}>
                     {hotel.images[0] && hotel.images[0].imageUrl ? (
                       <img
                         src={hotel.images[0].imageUrl}
                         alt="images"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
+                        style={{width:'100%', height:'200px', objectFit:'cover'}}
                       />
                     ) : (
                       <img
                         src={""} 
                         alt="No image"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
+                        style={{width:'100%', height:'200px', objectFit:'cover'}}
                       />
                     )}                      </td>
 
-                    {/* <td className="descr" style={{padding:'12px'}}>{hotel.description}</td> */}
-                    <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
+                    {/* <td className="descr" style={{padding:'16px'}}>{hotel.description}</td> */}
+                    <td style={{padding:'16px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
-                    <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/TourUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
+                    <td style={{textAlign:'center', padding:'16px 8px'}}>
+                        <Link to={`/TourUpdate/${hotel.id}`}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 
                         </Link>
-                        {hotel.status === 1 && ( // Conditionally render the delete button
-                          <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
-                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
-                          </button>
-                        )}
-                        <Link to={`/PlanList/${hotel.id}`} style={{marginRight:'16px'}}>
+                        <div style={{height:'12px'}}> </div>
+                        <Link to={`/PlanList/${hotel.id}`}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Plan
                         </button> 
                         </Link>
-                        <Link to={`/VehicleList/${hotel.id}`} style={{marginRight:'16px'}}>
+                        <div style={{height:'12px'}}> </div>
+                        <Link to={`/VehicleList/${hotel.id}`}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Vehicle
                         </button> 
                         </Link>
+                        {hotel.status === 1 && ( // Conditionally render the delete button
+                          <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)} style={{marginTop:'20px'}}>
+                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
+                          </button>
+                        )}
                     </td>
                   </tr>
                 ))}
@@ -160,6 +174,10 @@ const TourList = () => {
           </Box>
 
         </div>
+        </Box>
+        </main>
+        </div>
+        </>
      );
 }
  

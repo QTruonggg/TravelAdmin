@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import Team from "./scenes/team";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Dashboard from "./scenes/dashboard";
 import Contacts from "./scenes/contacts";
@@ -51,12 +51,24 @@ import FeedbackList from './scenes/feedback/list';
 import { UserProvider } from './store/context';
 import reducer from './store/reducer'
 import INIT_STATE from './store/initState';
+import { useEffect } from 'react';
+
 
 function App() {
   const localState = localStorage.getItem("state")?JSON.parse(localStorage.getItem("state")):INIT_STATE;
   const [theme, colorMode] = useMode();
-  const [isSidebar, setIsSidebar] = useState(true);
   const [state,dispatch] = useReducer(reducer,localState);
+
+  // useEffect(() => {
+  //   // Kiểm tra xem có token trong localStorage hay không
+  //   const token = localStorage.getItem("token");
+    
+  //   if (!token) {
+  //     <Navigate to="/" />;
+  //   } 
+  // }, []);
+
+
   const styles = {
     backgroundImage:"url(https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921)",
     width:"100%",
@@ -78,14 +90,9 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
-          <Topbar setIsSidebar={setIsSidebar} />
-          <main className="content" style={{ display: "flex" }}>
-            {isSidebar && <Sidebar isSidebar={isSidebar} />}
-            <Box flexGrow={1}>
               <Routes>
               <Route path="/" element={<Login />} />
-                <Route path="/home" element={<Dashboard />} />
+              <Route path="/home" element={<Dashboard />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/invoices" element={<Invoices />} />
@@ -106,23 +113,17 @@ function App() {
                 <Route path="/VehicleList/:hotelId" element={<VehicleList />} />
                 <Route path="/VehicleCreate/:hotelId" element={<VehicleCreate />} />
 
-
-
-
                 <Route path="/TouristSpotList" element={<TouristSpotList />} />
                 <Route path="/TouristSpotCreate" element={<TouristSpotCreate />} />
                 <Route path="/SpotUpdate/:id" element={<SpotUpdate />} />
-
 
                 <Route path="/ResortList" element={<ResortList />} />
                 <Route path="/ResortCreate" element={<ResortCreate />} />
                 <Route path="/ResortUpdate/:id" element={<ResortUpdate />} />
 
-
                 <Route path="/RestaurantList" element={<RestaurantList />} />
                 <Route path="/RestaurantCreate" element={<RestaurantCreate />} />
                 <Route path="/RestaurantUpdate/:id" element={<RestaurantUpdate />} />
-
 
                 <Route path="/RoomList/:hotelId" element={<RoomList />} />
                 <Route path="/RoomCreate/:hotelId" element={<RoomCreate />} />
@@ -132,21 +133,15 @@ function App() {
 
                 <Route path="/FeedbackList" element={<FeedbackList />} />
 
-
-
-                
-
-                <Route path="/form" element={<Form />} />
+                {/* <Route path="/form" element={<Form />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/bar" element={<Bar />} />
                 <Route path="pie" element={<Pie />} />
                 <Route path="/line" element={<Line />} />
-                <Route path="/geography" element={<Geography />} />
+                <Route path="/geography" element={<Geography />} /> */}
               </Routes>
-            </Box>
-          </main>
-        </div>
+            
       </ThemeProvider>
     </ColorModeContext.Provider>
     </UserProvider>

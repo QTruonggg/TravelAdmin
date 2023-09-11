@@ -4,11 +4,14 @@ import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
 import { useParams } from "react-router-dom";
+import Topbar from "../global/Topbar";
+import Sidebar from "../global/Sidebar";
 
 
 const RoomList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSidebar, setIsSidebar] = useState(true);
 
   const { hotelId } = useParams(); // Lấy ID từ tham số URL
   const itemsPerPage = 6;
@@ -45,6 +48,12 @@ const RoomList = () => {
 
 
     return ( 
+      <>
+      <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex", height:'90vh' }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
         <div className="container">
           <Box m="20px">
             <Header
@@ -69,15 +78,16 @@ const RoomList = () => {
               <tbody>
               {displayedHotels.map((hotel, index) => (
                   <tr key={index}>
-                    <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
+                    <td style={{padding:'12px', fontSize:'18px'}}>{startIndex + index + 1}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'20px'}}>{hotel.name}</td>
                     <td style={{padding:'12px'}}>
-                      <img src={hotel.images[0].imageUrl} alt="images" style={{width:'100%', height:'150px', objectFit:'cover'}}/>
+                      <img src={hotel.images[0].imageUrl} alt="images" style={{width:'100%', height:'180px', objectFit:'cover'}}/>
                     </td>
-                    <td className="descr" style={{padding:'12px'}}>{hotel.description}</td>
+                    <td className="descr" style={{ padding:'12px', height: '212px', display: '-webkit-box', overflow: 'hidden',
+                                              fontSize: '16px', WebkitLineClamp: '8',  WebkitBoxOrient: 'vertical',}}>{hotel.description}</td>
                     <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
-                    <td style={{textAlign:'right', padding:'8px'}}>
+                    <td style={{textAlign:'center', padding:'32px 0'}}>
                         {/* <Link to={`/hotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
@@ -118,6 +128,10 @@ const RoomList = () => {
           </Box>
 
         </div>
+        </Box>
+        </main>
+        </div>
+        </>
      );
 }
  

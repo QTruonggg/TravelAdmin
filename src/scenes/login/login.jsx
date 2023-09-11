@@ -6,7 +6,7 @@ import Header from "../../components/Header";
 import React, { useContext, useState } from "react";
 import UserContext from "../../store/context";
 //import '../../vendor/fontawesome-free/css/all.min.css'
-//import imgLg from '../../img/login-admin.png'
+import imgLg from '../../img/login-admin.png'
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 
@@ -30,25 +30,24 @@ const Login = () => {
             email: user.email,
             password: user.password,
           });
-          alert("doneeeeeeeeeeee")
+        //   alert("doneeeeeeeeeeee")
           const { data } = response;
           console.log(data)
     
       //    dispatch({ type: "UPDATE_USER", payload: data.user });
     
           localStorage.setItem("token", data.token);
-          response.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+        //   response.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
     
           navigate("/home");
+
         } catch (error) {
           console.error("Error logging in:", error);
         }
       };
     
-
     return (
-        
-        <div className="bg-gradient-primary"> 
+        <div className="bg-gradient-primary" style={{marginTop:'200px'}}> 
                     <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-xl-10 col-lg-12 col-md-9">
@@ -56,14 +55,14 @@ const Login = () => {
                                 <div className="card-body p-0">
                                     <div className="row">
                                         <div className="col-lg-6 d-none d-lg-block ">
-                                            {/* <img src={imgLg} alt="ImageLogin" style={{width:'100%'}}/> */}
+                                            <img src={imgLg} alt="ImageLogin" style={{width:'100%', borderRadius:'4px'}}/>
                                         </div>
                                         <div className="col-lg-6" style={{display:'grid', alignItems:'center'}}>
-                                            <div className="p-5">
+                                            <div className="p-5" style={{height:'70%', display:'grid', alignContent:'stretch', alignItems:'center'}}>
                                                 <div className="text-center">
                                                     <h1 className="h4 text-gray-900 mb-4">Welcome Admin</h1>
                                                 </div>
-                                                <form className="user" onSubmit={handleSubmit}>
+                                                <form className="user" onSubmit={handleSubmit} style={{display:'grid', height:'100%'}}>
 
                                                     <div className="form-group">
                                                         <input  type="email" className="form-control form-control-user" name="email"

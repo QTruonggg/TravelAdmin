@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataInvoices } from "../../data/mockData";
 import Header from "../../components/Header";
+import Topbar from '../global/Topbar';
+import Sidebar from '../global/Sidebar';
 
 const Invoices = () => {
   const theme = useTheme();
+  const [isSidebar, setIsSidebar] = useState(true);
   const colors = tokens(theme.palette.mode);
   const columns = [
     { field: "id", headerName: "ID" },
@@ -44,6 +47,12 @@ const Invoices = () => {
   ];
 
   return (
+    <>
+    <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex", height:'90vh' }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
     <Box m="20px">
       <Header title="INVOICES" subtitle="List of Invoice Balances" />
       <Box
@@ -81,6 +90,10 @@ const Invoices = () => {
         <DataGrid checkboxSelection rows={mockDataInvoices} columns={columns} />
       </Box>
     </Box>
+    </Box>
+    </main>
+        </div>
+    </>
   );
 };
 

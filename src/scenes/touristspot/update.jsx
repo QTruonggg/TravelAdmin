@@ -9,6 +9,8 @@ import axiosInstance from '../../utils/axiosInstance';
 import { useParams } from "react-router-dom";
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Topbar from '../global/Topbar';
+import Sidebar from '../global/Sidebar';
 
 const SpotUpdate = () => {
   const { id } = useParams(); 
@@ -16,7 +18,7 @@ const SpotUpdate = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [spotOptions, setSpotOptions] = useState(0);
-
+  const [isSidebar, setIsSidebar] = useState(true);
 
 
  
@@ -106,6 +108,12 @@ const SpotUpdate = () => {
   console.log("iddddddđ",selectedImageIds);
 
   return (
+    <>
+    <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex", height:'90vh' }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
     <div className='container-lg mt-5'>
       <Box m="20px">
         <Header title="Update District" subtitle="Update a district" />
@@ -237,6 +245,10 @@ const SpotUpdate = () => {
         </Formik>
       </Box>
     </div>
+    </Box>
+    </main>
+        </div>
+    </>
   );
 };
 

@@ -6,10 +6,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import {  Upload } from 'antd';
 import axiosInstance from '../../utils/axiosInstance';
+import Topbar from '../global/Topbar';
+import Sidebar from '../global/Sidebar';
 
 const DistrictCreate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedImages, setSelectedImages] = useState([]);
+  const [isSidebar, setIsSidebar] = useState(true);
 
   const handleFormSubmitDistrict = async (values, { setSubmitting,resetForm }) => {
     try {
@@ -44,6 +47,12 @@ const DistrictCreate = () => {
   };
 
   return (
+    <>
+    <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex", height:'90vh' }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
     <div className='container-lg mt-5'>
       <Box m="20px">
         <Header title="Add District" subtitle="Create a new district" />
@@ -156,6 +165,10 @@ const DistrictCreate = () => {
         </Formik>
       </Box>
     </div>
+    </Box>
+    </main>
+        </div>
+    </>
   );
 };
 

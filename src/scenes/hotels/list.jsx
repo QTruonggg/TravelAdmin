@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import Topbar from "../global/Topbar";
+import Sidebar from "../global/Sidebar";
 
 
 const HotelList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSidebar, setIsSidebar] = useState(true);
 
   const itemsPerPage = 6;
 
@@ -54,6 +57,12 @@ const HotelList = () => {
 
 
     return ( 
+      <>
+      <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex" }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
         <div className="container">
           <Box m="20px">
             <Header
@@ -65,11 +74,14 @@ const HotelList = () => {
                 Create Hotel
               </button>
             </Link>
+            <br />
+        <label htmlFor="">Search: </label>
             <input
           type="text"
           placeholder="Search by name..."
           value={searchQuery}
           onChange={handleSearchChange}
+          style={{marginLeft:'12px', marginTop: "24px", width:'30%', padding:'8px', borderRadius:'8px' }}
         />
 
             <table className="table" style={{marginTop:'24px'}}>
@@ -84,42 +96,45 @@ const HotelList = () => {
               <tbody>
               {displayedHotels.map((hotel, index) => (
                   <tr key={index}>
-                    <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
+                    <td style={{ padding: "12px", fontSize: "18px" }}>{startIndex + index + 1}</td>
+                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'20px'}}>{hotel.name}</td>
                     <td style={{padding:'12px'}}>
                     {hotel.images[0] && hotel.images[0].imageUrl ? (
                       <img
                         src={hotel.images[0].imageUrl}
                         alt="images"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
+                        style={{ width: "100%", height: "180px", objectFit: "cover" }}
                       />
                     ) : (
                       <img
                         src={""} 
                         alt="No image"
-                        style={{width:'100%', height:'150px', objectFit:'cover'}}
+                        style={{ width: "100%", height: "180px", objectFit: "cover" }}
                       />
                     )}                      </td>
-                    <td className="descr" style={{padding:'12px'}}>{hotel.description}</td>
+                    <td className="descr" style={{ padding:'12px', height: '208px', display: '-webkit-box', overflow: 'hidden',
+                                              fontSize: '16px', WebkitLineClamp: '8',  WebkitBoxOrient: 'vertical',}}>
+                                                {hotel.description}</td>
                     <td style={{padding:'12px'}}>{hotel.status==1?"Active":"InActive"}</td>
 
-                    <td style={{textAlign:'right', padding:'8px'}}>
-                        <Link to={`/HotelUpdate/${hotel.id}`} style={{marginRight:'16px'}}>
+                    <td style={{ textAlign: "center", padding: "20px 8px" }}>
+                        <Link to={`/HotelUpdate/${hotel.id}`} style={{ marginBottom: "16px" }}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> update
                         </button> 
                         </Link>
-                        {hotel.status === 1 && ( // Conditionally render the delete button
-                          <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)}>
-                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
-                          </button>
-                        )}
-
-                        <Link to={`/RoomList/${hotel.id}`} style={{marginRight:'16px'}}>
+                        <div style={{height:'12px'}}> </div>
+                        <Link to={`/RoomList/${hotel.id}`} style={{ marginBottom: "16px" }}>
                         <button style={{}} className="btn bg-success">
                             <i class="fa-solid fa-pen-to-square" style={{fontSize:'20px'}}></i> Room
                         </button> 
                         </Link>
+
+                        {hotel.status === 1 && ( // Conditionally render the delete button
+                          <button className="btn bg-danger" onClick={() => handleDelete(hotel.id)} style={{marginTop:'20px'}}>
+                            <i class="fa-solid fa-trash-can" style={{ fontSize: '20px' }}></i>
+                          </button>
+                        )}
                     </td>
                   </tr>
                 ))}
@@ -151,6 +166,10 @@ const HotelList = () => {
           </Box>
 
         </div>
+        </Box>
+        </main>
+        </div>
+        </>
      );
 }
  

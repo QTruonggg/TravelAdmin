@@ -10,6 +10,8 @@ import { useParams } from "react-router-dom";
 import { CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { MenuItem } from "@mui/material";
+import Topbar from '../global/Topbar';
+import Sidebar from '../global/Sidebar';
 
 
 const RestaurantUpdate = () => {
@@ -18,6 +20,7 @@ const RestaurantUpdate = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [spotOptions, setSpotOptions] = useState(0);
+  const [isSidebar, setIsSidebar] = useState(true);
 
   const [fetchedData, setFetchedData] = useState({spotId: 0, name: "",location: "",cuisineType: "",address: "",contactNumber: "",price: 0, description: "", images: [] });
   // Sử dụng fetchedData để đặt giá trị ban đầu cho initialValues
@@ -120,6 +123,12 @@ const RestaurantUpdate = () => {
   };
 
   return (
+    <>
+    <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex", height:'90vh' }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
     <div className='container-lg mt-5'>
       <Box m="20px">
         <Header title="Update District" subtitle="Update a district" />
@@ -305,6 +314,10 @@ const RestaurantUpdate = () => {
         </Formik>
       </Box>
     </div>
+    </Box>
+    </main>
+        </div>
+    </>
   );
 };
 

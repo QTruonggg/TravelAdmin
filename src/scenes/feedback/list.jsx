@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import axiosInstance from "../../utils/axiosInstance";
+import Topbar from "../global/Topbar";
+import Sidebar from "../global/Sidebar";
 
 
 const FeedbackList = () => {
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSidebar, setIsSidebar] = useState(true);
 
   const itemsPerPage = 6;
 
@@ -50,6 +53,12 @@ const FeedbackList = () => {
 
 
     return ( 
+      <>
+      <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex"}}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
         <div className="container">
           <Box m="20px">
             <Header
@@ -84,7 +93,9 @@ const FeedbackList = () => {
                     <td style={{padding:'12px'}}>{startIndex + index + 1}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.name}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.email}</td>
-                    <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.content}</td>
+                    <td style={{ padding:'12px', height: '135px', display: '-webkit-box', overflow: 'hidden',
+                                              fontSize: '16px', WebkitLineClamp: '5',  WebkitBoxOrient: 'vertical',}}>
+                                                {hotel.content}</td>
                     <td style={{padding:'12px', fontWeight:'bold', fontSize:'16px'}}>{hotel.createdAt}</td>
 
 
@@ -138,6 +149,10 @@ const FeedbackList = () => {
           </Box>
 
         </div>
+        </Box>
+        </main>
+        </div>
+        </>
      );
 }
  

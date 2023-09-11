@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useState }  from 'react';
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
@@ -7,8 +7,11 @@ import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettin
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
+import Topbar from '../global/Topbar';
+import Sidebar from '../global/Sidebar';
 
 const Team = () => {
+  const [isSidebar, setIsSidebar] = useState(true);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
@@ -70,6 +73,12 @@ const Team = () => {
   ];
 
   return (
+    <>
+    <div className="app">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <main className="content" style={{ display: "flex", height:'90vh' }}>
+            {isSidebar && <Sidebar isSidebar={isSidebar} />}
+            <Box flexGrow={1}>
     <Box m="20px">
       <Header title="TEAM" subtitle="Managing the Team Members" />
       <Box
@@ -104,6 +113,10 @@ const Team = () => {
         <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
       </Box>
     </Box>
+    </Box>
+          </main>
+        </div>
+    </>
   );
 };
 
